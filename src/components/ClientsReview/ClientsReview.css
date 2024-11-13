@@ -1,0 +1,42 @@
+.clientReviewDiv {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 20px 0px 0px 0px;
+    gap: 12px;
+}
+
+.clientReviewDiv__div--1 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: -20px;
+}
+
+
+.clientReview__img {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border: solid 1px #000;
+    border-radius: 100%;
+    margin-right: -20px;
+}
+
+.clientReviewDiv__div--2 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+}
+
+.clientReviewDiv__div--2 ion-icon {
+    color: #ffDC5C;
+
+}
+
+.clientReviewDiv__p {
+    font-family: "Inter", sans-serif;
+    margin: 0px
+}

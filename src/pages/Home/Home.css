@@ -1,0 +1,70 @@
+.backgroundAnimated {
+    position: absolute;
+    width: 300vw;
+    height: 300vh;
+    stroke: rgba(156, 163, 175, .3);
+    fill: rgba(156, 163, 175, .3);
+    pointer-events: none;
+    transform: rotate3d(01, 1, 0, 45deg);
+}
+
+.relative.h-screen.w-screen {
+    overflow: hidden;
+    min-height: 100vh;
+    width: 100vw;
+    overflow-y: auto;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.homeSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 2;
+}
+
+.home__h1 {
+    font-size: 32px;
+    font-weight: 600;
+    font-style: italic;
+    margin: 40px 0px 0px 0px;
+}
+
+.home__h1--2 {
+    font-family: "Inter", sans-serif;
+    margin: 0px;
+    font-size: 62px;
+    font-weight: 400;
+    text-align: center;
+    line-height: 105%;
+    width: 100%;
+    padding: 25px 20px 0px 20px;
+}
+
+.home__p {
+    font-family: "Inter", sans-serif;
+    margin: 12px 0px 0px 0px;
+    font-size: 16px;
+    text-align: center;
+    max-width: 600px;
+}
+
+.home__btn {
+    margin: 40px 0px 0px 0px;
+    background: #D2D2D2;
+    color: #000;
+    font-size: 18px;
+    font-weight: 500;
+    border: 0px;
+    border-radius: 100px;
+    padding: 10px 70px;
+    cursor: pointer;
+}

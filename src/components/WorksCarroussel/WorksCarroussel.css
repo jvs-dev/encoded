@@ -1,0 +1,14 @@
+.worksCarroussel {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    width: 100%;
+    padding: 20px 40px;
+}
+
+.WorksCarroussel__postImg {
+    border-radius: 8px;
+    width: calc(100vw / 4 - 100px);
+    aspect-ratio: 1/1;
+    object-fit: cover;
+}
