@@ -1,9 +1,9 @@
 import React from "react";
 import GridPattern from "../../components/GridPattern";
-import './Home.css'
 import Header from "../../components/Header/Header";
 import ClientsReview from "../../components/ClientsReview/ClientsReview";
-import WorksCarroussel from "../../components/worksCarroussel/worksCarroussel";
+import WorksCarroussel from "../../components/WorksCarroussel/Works";
+import './Home.css'
 
 function Home() {
     return (
