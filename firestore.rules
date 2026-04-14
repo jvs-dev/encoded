@@ -19,7 +19,10 @@ service cloud.firestore {
     }
 
     function isAdmin() {
-      return isAuthenticated() && request.auth.token.email == "jvssilv4@gmail.com" && request.auth.token.email_verified == true;
+      return isAuthenticated() && (
+        exists(/databases/$(database)/documents/admins/$(request.auth.token.email)) ||
+        (request.auth.token.email == "jvssilv4@gmail.com" && request.auth.token.email_verified == true)
+      );
     }
 
     function isValidEmail(email) {
@@ -59,14 +62,18 @@ service cloud.firestore {
       // Anyone can update the duration of an event
       allow update: if request.resource.data.diff(resource.data).affectedKeys().hasOnly(['duration']) &&
                        request.resource.data.duration is number;
-      // Allow public read for the dashboard (protected by hardcoded password in the app)
-      allow read: if true;
+      // Only admins can read analytics
+      allow read: if isAdmin();
     }
 
     match /site_content/{contentId} {
       allow read: if true;
-      // WARNING: Public write enabled as per user request for frontend-only password protection.
-      allow write: if true;
+      allow write: if isAdmin();
+    }
+
+    match /admins/{email} {
+      allow read: if isAdmin();
+      allow write: if isAdmin();
     }
   }
 }

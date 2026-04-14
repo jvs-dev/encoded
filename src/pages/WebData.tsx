@@ -8,8 +8,9 @@ import {
   Globe, Smartphone, Monitor, ChevronRight, ArrowUp, Eye, EyeOff
 } from 'lucide-react';
 import { collection, getDocs, query, where, Timestamp, doc, getDoc } from 'firebase/firestore';
-import { db } from '../firebase';
-import { LayoutDashboard } from 'lucide-react';
+import { db, auth, googleProvider } from '../firebase';
+import { signInWithPopup, signOut, onAuthStateChanged, User } from 'firebase/auth';
+import { LayoutDashboard, Calendar } from 'lucide-react';
 
 const AdminNav = () => (
   <div className="flex space-x-6 mr-8 border-r border-white/10 pr-8">
@@ -47,11 +48,10 @@ const mockTopButtons = [
 ];
 
 export default function WebData() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [password, setPassword] = useState('');
+  const [user, setUser] = useState<User | null>(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
+  const [dateFilter, setDateFilter] = useState<'today' | '7days' | '30days' | 'year'>('7days');
 
   // Data states
   const [visitsToday, setVisitsToday] = useState(0);
@@ -69,35 +69,31 @@ export default function WebData() {
   const [adminPassword, setAdminPassword] = useState('encoded123');
 
   useEffect(() => {
-    const fetchPassword = async () => {
-      try {
-        const docRef = doc(db, 'site_content', 'main');
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists() && docSnap.data().adminPassword) {
-          setAdminPassword(docSnap.data().adminPassword);
-        }
-      } catch (err) {
-        console.error('Error fetching password:', err);
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser) {
+        setUser(currentUser);
+      } else {
+        setUser(null);
       }
-    };
-    fetchPassword();
-    if (localStorage.getItem('encoded_admin_auth') === 'true') {
-      setIsAuthenticated(true);
-    }
+    });
+    return () => unsubscribe();
   }, []);
 
   useEffect(() => {
-    if (!isAuthenticated) return;
+    if (!user) return;
 
     const fetchData = async () => {
       setLoading(true);
       try {
-        const thirtyDaysAgo = new Date();
-        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+        const startDate = new Date();
+        if (dateFilter === 'today') startDate.setHours(0, 0, 0, 0);
+        else if (dateFilter === '7days') startDate.setDate(startDate.getDate() - 7);
+        else if (dateFilter === '30days') startDate.setDate(startDate.getDate() - 30);
+        else if (dateFilter === 'year') startDate.setFullYear(startDate.getFullYear() - 1);
         
         const qEvents = query(
           collection(db, 'analytics_events'), 
-          where('timestamp', '>=', Timestamp.fromDate(thirtyDaysAgo))
+          where('timestamp', '>=', Timestamp.fromDate(startDate))
         );
         
         const snap = await getDocs(qEvents);
@@ -143,6 +139,7 @@ export default function WebData() {
             if ((now.getTime() - date.getTime()) <= 7 * 24 * 60 * 60 * 1000) vWeek++;
             if ((now.getTime() - date.getTime()) <= 30 * 24 * 60 * 60 * 1000) vMonth++;
 
+            // Only add to chart if it's within the 7 days array
             const chartDay = last7Days.find(d => d.dateStr === dateStr);
             if (chartDay) chartDay.visitas++;
 
@@ -207,27 +204,26 @@ export default function WebData() {
     };
 
     fetchData();
-  }, [isAuthenticated]);
+  }, [user, dateFilter]);
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (password === adminPassword) {
-      setIsAuthenticated(true);
-      localStorage.setItem('encoded_admin_auth', 'true');
-      setError('');
-    } else {
-      setError('Senha incorreta. Tente novamente.');
+  const handleLogin = async () => {
+    setError('');
+    try {
+      await signInWithPopup(auth, googleProvider);
+    } catch (err: any) {
+      setError('Erro ao fazer login: ' + err.message);
     }
   };
 
-  const handleLogout = () => {
-    setIsAuthenticated(false);
-    setPassword('');
-    localStorage.removeItem('encoded_admin_auth');
-    window.location.href = '/';
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
-  if (!isAuthenticated) {
+  if (!user) {
     return (
       <div className="min-h-screen bg-black text-white flex items-center justify-center p-4">
         <motion.div 
@@ -242,34 +238,17 @@ export default function WebData() {
           </div>
           <h1 className="text-2xl font-bold text-center mb-2">Acesso Restrito</h1>
           <p className="text-gray-400 text-center mb-8 text-sm">
-            Insira a senha de administrador para acessar os insights do site.
+            Faça login com sua conta Google autorizada para acessar os insights do site.
           </p>
           
-          <form onSubmit={handleLogin} className="space-y-4">
-            <div className="relative">
-              <input
-                type={showPassword ? "text" : "password"}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Senha de acesso"
-                className="w-full bg-black border border-white/10 px-4 py-3 text-white focus:outline-none focus:border-white transition-colors text-center tracking-widest pr-12"
-              />
-              <button 
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
-              >
-                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-              </button>
-            </div>
-            {error && <p className="text-red-400 text-sm text-center">{error}</p>}
-            <button
-              type="submit"
-              className="w-full bg-white text-black font-bold py-3 hover:bg-gray-200 transition-colors"
-            >
-              Acessar Dashboard
-            </button>
-          </form>
+          <button
+            onClick={handleLogin}
+            className="w-full bg-white text-black font-bold py-3 hover:bg-gray-200 transition-colors flex items-center justify-center"
+          >
+            Entrar com Google
+          </button>
+          
+          {error && <p className="text-red-400 text-sm text-center mt-4">{error}</p>}
           
           <div className="mt-6 text-center">
             <a href="/" className="text-gray-500 hover:text-white text-sm inline-flex items-center transition-colors">
@@ -303,9 +282,24 @@ export default function WebData() {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12">
-        <div className="mb-10">
-          <h1 className="text-3xl font-bold mb-2">Visão Geral</h1>
-          <p className="text-gray-400">Acompanhe o desempenho e o engajamento do seu site.</p>
+        <div className="flex flex-col md:flex-row md:items-center justify-between mb-10 gap-4">
+          <div>
+            <h1 className="text-3xl font-bold mb-2">Visão Geral</h1>
+            <p className="text-gray-400">Acompanhe o desempenho e o engajamento do seu site.</p>
+          </div>
+          <div className="flex items-center bg-zinc-950 border border-white/10 p-1 rounded">
+            <Calendar className="w-4 h-4 text-gray-400 ml-3 mr-2" />
+            <select
+              value={dateFilter}
+              onChange={(e) => setDateFilter(e.target.value as any)}
+              className="bg-transparent text-sm text-white focus:outline-none py-2 pr-4 cursor-pointer"
+            >
+              <option value="today" className="bg-zinc-900">Hoje</option>
+              <option value="7days" className="bg-zinc-900">Últimos 7 dias</option>
+              <option value="30days" className="bg-zinc-900">Últimos 30 dias</option>
+              <option value="year" className="bg-zinc-900">Este Ano</option>
+            </select>
+          </div>
         </div>
 
         {/* KPI Cards */}

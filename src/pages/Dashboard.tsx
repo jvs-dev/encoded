@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { db } from '../firebase';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { db, auth, googleProvider } from '../firebase';
+import { doc, getDoc, setDoc, collection, getDocs, deleteDoc, query, orderBy } from 'firebase/firestore';
+import { signInWithPopup, signOut, onAuthStateChanged, User } from 'firebase/auth';
 import { motion } from 'motion/react';
-import { Lock, Save, LogOut, ArrowLeft, Loader2, LayoutDashboard, Activity, Eye, EyeOff } from 'lucide-react';
+import { Lock, Save, LogOut, ArrowLeft, Loader2, LayoutDashboard, Activity, Users, MessageSquare, Trash2, Plus } from 'lucide-react';
 
 const CONTENT_ID = 'main';
 
@@ -18,13 +19,19 @@ const AdminNav = () => (
 );
 
 export default function Dashboard() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [passwordInput, setPasswordInput] = useState('');
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
+  const [activeTab, setActiveTab] = useState<'content' | 'leads' | 'admins'>('content');
+  
+  // Leads state
+  const [leads, setLeads] = useState<any[]>([]);
+  
+  // Admins state
+  const [admins, setAdmins] = useState<any[]>([]);
+  const [newAdminEmail, setNewAdminEmail] = useState('');
   
   const [content, setContent] = useState({
     adminPassword: 'encoded123',
@@ -72,11 +79,82 @@ export default function Dashboard() {
   });
 
   useEffect(() => {
-    fetchContent();
-    if (localStorage.getItem('encoded_admin_auth') === 'true') {
-      setIsAuthenticated(true);
-    }
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      if (currentUser) {
+        setUser(currentUser);
+        await fetchContent();
+        await fetchLeads();
+        await fetchAdmins();
+      } else {
+        setUser(null);
+        setLoading(false);
+      }
+    });
+    return () => unsubscribe();
   }, []);
+
+  const fetchLeads = async () => {
+    try {
+      const q = query(collection(db, 'leads'), orderBy('createdAt', 'desc'));
+      const snap = await getDocs(q);
+      setLeads(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const fetchAdmins = async () => {
+    try {
+      const snap = await getDocs(collection(db, 'admins'));
+      setAdmins(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleAddAdmin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newAdminEmail) return;
+    try {
+      await setDoc(doc(db, 'admins', newAdminEmail.toLowerCase()), {
+        email: newAdminEmail.toLowerCase(),
+        role: 'admin',
+        addedAt: new Date()
+      });
+      setNewAdminEmail('');
+      fetchAdmins();
+      setSuccessMsg('Administrador adicionado com sucesso!');
+      setTimeout(() => setSuccessMsg(''), 3000);
+    } catch (err) {
+      setError('Erro ao adicionar administrador. Verifique suas permissões.');
+    }
+  };
+
+  const handleRemoveAdmin = async (email: string) => {
+    if (email === 'jvssilv4@gmail.com') {
+      alert('Não é possível remover o administrador principal.');
+      return;
+    }
+    if (window.confirm(`Remover ${email} dos administradores?`)) {
+      try {
+        await deleteDoc(doc(db, 'admins', email));
+        fetchAdmins();
+      } catch (err) {
+        setError('Erro ao remover administrador.');
+      }
+    }
+  };
+
+  const handleDeleteLead = async (id: string) => {
+    if (window.confirm('Tem certeza que deseja excluir este lead?')) {
+      try {
+        await deleteDoc(doc(db, 'leads', id));
+        fetchLeads();
+      } catch (err) {
+        setError('Erro ao excluir lead.');
+      }
+    }
+  };
 
   const fetchContent = async () => {
     try {
@@ -92,21 +170,21 @@ export default function Dashboard() {
     }
   };
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (passwordInput === content.adminPassword) {
-      setIsAuthenticated(true);
-      localStorage.setItem('encoded_admin_auth', 'true');
-      setError('');
-    } else {
-      setError('Senha incorreta.');
+  const handleLogin = async () => {
+    setError('');
+    try {
+      await signInWithPopup(auth, googleProvider);
+    } catch (err: any) {
+      setError('Erro ao fazer login: ' + err.message);
     }
   };
 
-  const handleLogout = () => {
-    setIsAuthenticated(false);
-    setPasswordInput('');
-    localStorage.removeItem('encoded_admin_auth');
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const handleSave = async () => {
@@ -150,7 +228,7 @@ export default function Dashboard() {
     );
   }
 
-  if (!isAuthenticated) {
+  if (!user) {
     return (
       <div className="min-h-screen bg-black text-white flex items-center justify-center p-4">
         <motion.div 
@@ -163,36 +241,19 @@ export default function Dashboard() {
               <Lock className="w-8 h-8 text-white" />
             </div>
           </div>
-          <h1 className="text-2xl font-bold text-center mb-2">Painel Administrativo</h1>
+          <h1 className="text-2xl font-bold text-center mb-2">Acesso Restrito</h1>
           <p className="text-gray-400 text-center mb-8 text-sm">
-            Insira a senha de administrador para gerenciar os textos do site.
+            Faça login com sua conta Google autorizada para acessar o painel.
           </p>
           
-          <form onSubmit={handleLogin} className="space-y-4">
-            <div className="relative">
-              <input
-                type={showPassword ? "text" : "password"}
-                value={passwordInput}
-                onChange={(e) => setPasswordInput(e.target.value)}
-                placeholder="Senha de acesso"
-                className="w-full bg-black border border-white/10 px-4 py-3 text-white focus:outline-none focus:border-white transition-colors text-center tracking-widest pr-12"
-              />
-              <button 
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
-              >
-                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-              </button>
-            </div>
-            {error && <p className="text-red-400 text-sm text-center">{error}</p>}
-            <button
-              type="submit"
-              className="w-full bg-white text-black font-bold py-3 hover:bg-gray-200 transition-colors"
-            >
-              Acessar Dashboard
-            </button>
-          </form>
+          <button
+            onClick={handleLogin}
+            className="w-full bg-white text-black font-bold py-3 hover:bg-gray-200 transition-colors flex items-center justify-center"
+          >
+            Entrar com Google
+          </button>
+          
+          {error && <p className="text-red-400 text-sm text-center mt-4">{error}</p>}
           
           <div className="mt-6 text-center">
             <a href="/" className="text-gray-500 hover:text-white text-sm inline-flex items-center transition-colors">
@@ -217,8 +278,8 @@ export default function Dashboard() {
             <AdminNav />
             <button 
               onClick={handleSave}
-              disabled={saving}
-              className="bg-white text-black px-4 py-2 rounded text-sm font-bold flex items-center hover:bg-gray-200 transition-colors disabled:opacity-50 mr-4"
+              disabled={saving || activeTab !== 'content'}
+              className={`bg-white text-black px-4 py-2 rounded text-sm font-bold flex items-center transition-colors mr-4 ${activeTab !== 'content' ? 'opacity-0 pointer-events-none' : 'hover:bg-gray-200 disabled:opacity-50'}`}
             >
               {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
               Salvar Alterações
@@ -232,11 +293,37 @@ export default function Dashboard() {
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-12">
         <div className="mb-10">
-          <h1 className="text-3xl font-bold mb-2">Gerenciar Conteúdo</h1>
-          <p className="text-gray-400">Altere os textos principais das seções do site.</p>
+          <h1 className="text-3xl font-bold mb-2">Painel de Controle</h1>
+          <p className="text-gray-400">Gerencie o conteúdo, leads e acessos do site.</p>
         </div>
 
-        <div className="space-y-8">
+        {/* Tabs */}
+        <div className="flex space-x-1 border-b border-white/10 mb-8">
+          <button
+            onClick={() => setActiveTab('content')}
+            className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors ${activeTab === 'content' ? 'border-white text-white' : 'border-transparent text-gray-400 hover:text-white'}`}
+          >
+            <LayoutDashboard className="w-4 h-4 inline-block mr-2" />
+            Conteúdo
+          </button>
+          <button
+            onClick={() => setActiveTab('leads')}
+            className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors ${activeTab === 'leads' ? 'border-white text-white' : 'border-transparent text-gray-400 hover:text-white'}`}
+          >
+            <MessageSquare className="w-4 h-4 inline-block mr-2" />
+            Leads
+          </button>
+          <button
+            onClick={() => setActiveTab('admins')}
+            className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors ${activeTab === 'admins' ? 'border-white text-white' : 'border-transparent text-gray-400 hover:text-white'}`}
+          >
+            <Users className="w-4 h-4 inline-block mr-2" />
+            Acessos
+          </button>
+        </div>
+
+        {activeTab === 'content' && (
+          <div className="space-y-8">
           {/* Configurações */}
           <section className="bg-zinc-950 border border-white/10 p-6">
             <h2 className="text-lg font-bold mb-6 border-b border-white/5 pb-4 text-red-400">Configurações de Acesso</h2>
@@ -468,6 +555,111 @@ export default function Dashboard() {
           </section>
 
         </div>
+        )}
+
+        {activeTab === 'leads' && (
+          <div className="space-y-6">
+            <section className="bg-zinc-950 border border-white/10 p-6">
+              <h2 className="text-lg font-bold mb-6 border-b border-white/5 pb-4 flex items-center">
+                <MessageSquare className="w-5 h-5 mr-2" /> Contatos Recebidos
+              </h2>
+              {leads.length === 0 ? (
+                <p className="text-gray-500 text-center py-8">Nenhum contato recebido ainda.</p>
+              ) : (
+                <div className="space-y-4">
+                  {leads.map(lead => (
+                    <div key={lead.id} className="p-4 border border-white/5 bg-black relative group">
+                      <button 
+                        onClick={() => handleDeleteLead(lead.id)}
+                        className="absolute top-4 right-4 text-gray-500 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
+                        title="Excluir"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                      <div className="grid md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                          <p className="text-xs text-gray-500 uppercase tracking-widest mb-1">Nome</p>
+                          <p className="font-bold">{lead.name}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs text-gray-500 uppercase tracking-widest mb-1">Data</p>
+                          <p className="text-gray-300">
+                            {lead.createdAt?.toDate ? lead.createdAt.toDate().toLocaleString('pt-BR') : 'Data desconhecida'}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-xs text-gray-500 uppercase tracking-widest mb-1">Email</p>
+                          <a href={`mailto:${lead.email}`} className="text-blue-400 hover:underline">{lead.email}</a>
+                        </div>
+                        <div>
+                          <p className="text-xs text-gray-500 uppercase tracking-widest mb-1">Telefone</p>
+                          <p className="text-gray-300">{lead.phone || 'Não informado'}</p>
+                        </div>
+                      </div>
+                      <div className="pt-4 border-t border-white/5">
+                        <p className="text-xs text-gray-500 uppercase tracking-widest mb-2">Mensagem</p>
+                        <p className="text-gray-300 whitespace-pre-wrap">{lead.message}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </section>
+          </div>
+        )}
+
+        {activeTab === 'admins' && (
+          <div className="space-y-6">
+            <section className="bg-zinc-950 border border-white/10 p-6">
+              <h2 className="text-lg font-bold mb-6 border-b border-white/5 pb-4 flex items-center">
+                <Users className="w-5 h-5 mr-2" /> Administradores
+              </h2>
+              
+              <form onSubmit={handleAddAdmin} className="flex gap-4 mb-8">
+                <input
+                  type="email"
+                  value={newAdminEmail}
+                  onChange={(e) => setNewAdminEmail(e.target.value)}
+                  placeholder="Email do novo administrador"
+                  className="flex-1 bg-black border border-white/10 px-4 py-3 text-white focus:outline-none focus:border-white transition-colors"
+                  required
+                />
+                <button 
+                  type="submit"
+                  className="bg-white text-black px-6 py-3 font-bold hover:bg-gray-200 transition-colors flex items-center"
+                >
+                  <Plus className="w-4 h-4 mr-2" /> Adicionar
+                </button>
+              </form>
+
+              <div className="space-y-2">
+                <div className="flex items-center justify-between p-4 border border-white/5 bg-black">
+                  <div>
+                    <p className="font-bold">jvssilv4@gmail.com</p>
+                    <p className="text-xs text-green-400 mt-1">Admin Principal</p>
+                  </div>
+                </div>
+                {admins.filter(a => a.email !== 'jvssilv4@gmail.com').map(admin => (
+                  <div key={admin.id} className="flex items-center justify-between p-4 border border-white/5 bg-black">
+                    <div>
+                      <p className="font-bold">{admin.email}</p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        Adicionado em: {admin.addedAt?.toDate ? admin.addedAt.toDate().toLocaleDateString('pt-BR') : ''}
+                      </p>
+                    </div>
+                    <button 
+                      onClick={() => handleRemoveAdmin(admin.email)}
+                      className="text-gray-500 hover:text-red-400 transition-colors p-2"
+                      title="Remover acesso"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </section>
+          </div>
+        )}
 
         {error && <p className="text-red-400 text-sm mt-6 text-center bg-red-400/10 p-3 rounded">{error}</p>}
         {successMsg && <p className="text-green-400 text-sm mt-6 text-center bg-green-400/10 p-3 rounded">{successMsg}</p>}

@@ -252,6 +252,14 @@ export default function Landing() {
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
   const [showBackToTop, setShowBackToTop] = useState(false);
   const [isPrivacyModalOpen, setIsPrivacyModalOpen] = useState(false);
+  const [showFloatingWhatsApp, setShowFloatingWhatsApp] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowFloatingWhatsApp(true);
+    }, 60000); // 1 minute
+    return () => clearTimeout(timer);
+  }, []);
 
   const [siteContent, setSiteContent] = useState({
     heroTitle: 'Engenharia digital para resultados reais.',
@@ -1453,6 +1461,26 @@ export default function Landing() {
               </div>
             </motion.div>
           </div>
+        )}
+      </AnimatePresence>
+
+      {/* Floating WhatsApp Button */}
+      <AnimatePresence>
+        {showFloatingWhatsApp && (
+          <motion.a 
+            initial={{ opacity: 0, scale: 0.5, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.5, y: 20 }}
+            href="https://wa.me/5571991895994" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="fixed bottom-6 right-6 z-50 bg-[#25D366] text-white p-4 rounded-full shadow-lg hover:scale-110 transition-transform flex items-center justify-center group"
+            aria-label="Falar no WhatsApp"
+            onClick={() => trackClick('WhatsApp Flutuante')}
+          >
+            <div className="absolute inset-0 bg-[#25D366] rounded-full animate-ping opacity-75"></div>
+            <WhatsAppIcon className="w-7 h-7 relative z-10" />
+          </motion.a>
         )}
       </AnimatePresence>
     </div>

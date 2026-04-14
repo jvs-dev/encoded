@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { initializeFirestore, doc, getDocFromServer } from 'firebase/firestore';
-import { getAuth } from 'firebase/auth';
+import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 
 const firebaseConfig = {
   apiKey: "AIzaSyDHfIl1IqcjX2RSPEqJ8WC6QnwzGW2YyZE",
@@ -17,6 +17,7 @@ export const db = initializeFirestore(app, {
   experimentalForceLongPolling: true
 });
 export const auth = getAuth(app);
+export const googleProvider = new GoogleAuthProvider();
 
 // Test connection
 async function testConnection() {
