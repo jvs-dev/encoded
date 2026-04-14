@@ -1,0 +1,72 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    // Collection: leads
+    // Document ID: auto-generated
+    // Fields:
+    //   - name: string (required, max 100 chars)
+    //   - email: string (required, valid email)
+    //   - phone: string (optional, max 20 chars)
+    //   - message: string (required, max 2000 chars)
+    //   - createdAt: timestamp (required)
+    // ===============================================================
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() && request.auth.token.email == "jvssilv4@gmail.com" && request.auth.token.email_verified == true;
+    }
+
+    function isValidEmail(email) {
+      return email is string && email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
+    }
+
+    function isValidLead(data) {
+      return data.keys().hasAll(['name', 'email', 'message', 'createdAt']) &&
+             data.name is string && data.name.size() > 0 && data.name.size() <= 100 &&
+             isValidEmail(data.email) &&
+             (!('phone' in data) || (data.phone is string && data.phone.size() <= 20)) &&
+             data.message is string && data.message.size() > 0 && data.message.size() <= 2000 &&
+             data.createdAt is timestamp;
+    }
+
+    function isValidAnalyticsEvent(data) {
+      return data.keys().hasAll(['type', 'timestamp']) &&
+             data.type in ['page_view', 'button_click', 'section_view'] &&
+             data.timestamp is timestamp &&
+             (!('referrer' in data) || data.referrer is string) &&
+             (!('isMobile' in data) || data.isMobile is bool) &&
+             (!('duration' in data) || data.duration is number) &&
+             (!('buttonName' in data) || data.buttonName is string) &&
+             (!('sectionName' in data) || data.sectionName is string);
+    }
+
+    match /leads/{leadId} {
+      // Anyone can create a lead (contact form submission)
+      allow create: if isValidLead(request.resource.data);
+      // Only admin can read, update, or delete leads
+      allow read, update, delete: if isAdmin();
+    }
+
+    match /analytics_events/{eventId} {
+      // Anyone can create an analytics event
+      allow create: if isValidAnalyticsEvent(request.resource.data);
+      // Anyone can update the duration of an event
+      allow update: if request.resource.data.diff(resource.data).affectedKeys().hasOnly(['duration']) &&
+                       request.resource.data.duration is number;
+      // Allow public read for the dashboard (protected by hardcoded password in the app)
+      allow read: if true;
+    }
+
+    match /site_content/{contentId} {
+      allow read: if true;
+      // WARNING: Public write enabled as per user request for frontend-only password protection.
+      allow write: if true;
+    }
+  }
+}
