@@ -46,12 +46,12 @@ export default function Dashboard() {
     faqSubtitle: 'Tire suas dúvidas e entenda como podemos ajudar o seu negócio a crescer.',
     packagesSubtitle: 'Escolha a solução ideal para colocar sua empresa em um novo patamar agora.',
     services: [
-      { title: "Sites Personalizados", description: "Presença digital profissional e otimizada para conversão.", price: "A partir de R$ 150" },
-      { title: "Sistemas Completos", description: "Soluções sob medida para automatizar e otimizar seus processos.", price: "Preço sob consulta" },
-      { title: "Identidade Visual", description: "Marcas fortes, memoráveis e alinhadas com seu propósito.", price: "A partir de R$ 500" },
-      { title: "Social Media", description: "Gestão estratégica de redes sociais para gerar autoridade.", price: "A partir de R$ 800/mês" },
-      { title: "Tráfego Pago", description: "Anúncios otimizados no Google e Meta Ads para atrair clientes.", price: "A partir de R$ 600/mês" },
-      { title: "Consultoria", description: "Diagnóstico e plano de ação para escalar seu negócio digital.", price: "R$ 350 / sessão" }
+      { title: "Sites Personalizados", description: "Presença digital profissional e otimizada para conversão.", price: "A partir de R$ 150", promo: true, active: true },
+      { title: "Sistemas Completos", description: "Soluções sob medida para automatizar e otimizar seus processos.", price: "Preço sob consulta", active: true },
+      { title: "Posts para Redes Sociais", description: "Design estratégico que comunica o valor da sua marca.", price: "A partir de R$ 10", promo: true, active: true },
+      { title: "Carrossel 5 slides", description: "Conteúdo denso e engajador para o seu Instagram/LinkedIn.", price: "A partir de R$ 20", promo: true, active: true },
+      { title: "Identidade Visual", description: "Marcas fortes, memoráveis e alinhadas com seu propósito.", price: "A partir de R$ 500", active: true },
+      { title: "Consultoria", description: "Diagnóstico e plano de ação para escalar seu negócio digital.", price: "R$ 350 / sessão", active: true }
     ],
     packages: [
       {
@@ -208,10 +208,28 @@ export default function Dashboard() {
     setContent(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleServiceChange = (index: number, field: string, value: string) => {
+  const handleServiceChange = (index: number, field: string, value: any) => {
     const newServices = [...content.services];
     newServices[index] = { ...newServices[index], [field]: value };
     setContent(prev => ({ ...prev, services: newServices }));
+  };
+
+  const addService = () => {
+    const newService = {
+      title: "Novo Serviço",
+      description: "Descrição do serviço...",
+      price: "A partir de R$ 0",
+      active: true,
+      promo: false
+    };
+    setContent(prev => ({ ...prev, services: [...prev.services, newService] }));
+  };
+
+  const removeService = (index: number) => {
+    if (window.confirm('Deseja realmente excluir este serviço?')) {
+      const newServices = content.services.filter((_, i) => i !== index);
+      setContent(prev => ({ ...prev, services: newServices }));
+    }
   };
 
   const handlePackageChange = (index: number, field: string, value: string) => {
@@ -456,11 +474,31 @@ export default function Dashboard() {
 
           {/* Serviços */}
           <section className="bg-zinc-950 border border-white/10 p-6">
-            <h2 className="text-lg font-bold mb-6 border-b border-white/5 pb-4">Serviços (Cards)</h2>
+            <div className="flex justify-between items-center mb-6 border-b border-white/5 pb-4">
+              <h2 className="text-lg font-bold">Serviços (Cards)</h2>
+              <button 
+                onClick={addService}
+                className="text-xs font-bold bg-white/5 hover:bg-white/10 text-white px-3 py-1.5 flex items-center transition-colors"
+              >
+                <Plus className="w-3 h-3 mr-2" /> Adicionar Serviço
+              </button>
+            </div>
             <div className="space-y-8">
               {content.services.map((service, index) => (
-                <div key={index} className="p-4 border border-white/5 bg-black">
-                  <h3 className="text-sm font-bold text-gray-400 mb-4 uppercase tracking-wider">Serviço {index + 1}</h3>
+                <div key={index} className={`p-4 border ${service.active === false ? 'border-red-500/20 opacity-60' : 'border-white/5'} bg-black relative group`}>
+                  <div className="absolute top-4 right-4 flex space-x-2">
+                    <button 
+                      onClick={() => removeService(index)}
+                      className="p-2 text-gray-500 hover:text-red-400 transition-colors"
+                      title="Excluir Serviço"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                  <h3 className="text-sm font-bold text-gray-400 mb-4 uppercase tracking-wider flex items-center">
+                    Serviço {index + 1}
+                    {service.active === false && <span className="ml-2 text-[10px] bg-red-500/20 text-red-400 px-1.5 py-0.5 rounded">Inativo</span>}
+                  </h3>
                   <div className="space-y-4">
                     <div>
                       <label className="block text-xs uppercase tracking-widest text-gray-500 mb-2">Título</label>
@@ -487,6 +525,28 @@ export default function Dashboard() {
                         onChange={(e) => handleServiceChange(index, 'price', e.target.value)}
                         className="w-full bg-zinc-950 border border-white/10 p-3 text-white focus:outline-none focus:border-white transition-colors"
                       />
+                    </div>
+                    <div className="flex items-center space-x-6">
+                      <div className="flex items-center">
+                        <input 
+                          type="checkbox"
+                          id={`promo-${index}`}
+                          checked={service.promo || false}
+                          onChange={(e) => handleServiceChange(index, 'promo', e.target.checked)}
+                          className="w-4 h-4 bg-zinc-950 border border-white/10 rounded focus:ring-0 focus:ring-offset-0"
+                        />
+                        <label htmlFor={`promo-${index}`} className="ml-2 text-xs uppercase tracking-widest text-gray-500 cursor-pointer">Em Promoção</label>
+                      </div>
+                      <div className="flex items-center">
+                        <input 
+                          type="checkbox"
+                          id={`active-${index}`}
+                          checked={service.active !== false}
+                          onChange={(e) => handleServiceChange(index, 'active', e.target.checked)}
+                          className="w-4 h-4 bg-zinc-950 border border-white/10 rounded focus:ring-0 focus:ring-offset-0"
+                        />
+                        <label htmlFor={`active-${index}`} className="ml-2 text-xs uppercase tracking-widest text-gray-500 cursor-pointer">Ativo no Site</label>
+                      </div>
                     </div>
                   </div>
                 </div>
