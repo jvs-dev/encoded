@@ -88,7 +88,7 @@ export function Hero({ subtitle, videoUrl, onTrackClick }: HeroProps) {
                 ))}
               </div>
               <div>
-                <p className="text-sm font-bold text-white">+250 empresas</p>
+                <p className="text-sm font-bold text-white">+30 empresas</p>
                 <p className="text-xs text-gray-500">Impulsionadas pela nossa engenharia</p>
               </div>
             </div>
