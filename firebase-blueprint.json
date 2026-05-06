@@ -69,6 +69,23 @@
           }
         }
       }
+    },
+    "Prospect": {
+      "title": "Prospect",
+      "description": "A potential business client for prospecing.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "region": { "type": "string" },
+        "sector": { "type": "string" },
+        "size": { "type": "string" },
+        "phone": { "type": "string" },
+        "status": { "type": "string", "enum": ["Novo", "Contatado", "Interessado", "Convertido", "Recusado"] },
+        "notes": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "region", "sector", "phone", "status", "createdAt"]
     }
   },
   "firestore": {
@@ -83,6 +100,10 @@
     "/site_content/{contentId}": {
       "schema": { "$ref": "#/entities/SiteContent" },
       "description": "Collection of site content."
+    },
+    "/prospects/{prospectId}": {
+      "schema": { "$ref": "#/entities/Prospect" },
+      "description": "Collection of business prospects."
     }
   }
 }

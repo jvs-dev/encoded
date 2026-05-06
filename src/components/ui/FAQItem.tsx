@@ -27,7 +27,7 @@ export function FAQItem({ question, answer, isOpen, onClick }: FAQItemProps) {
         <motion.div
           animate={{ rotate: isOpen ? 180 : 0 }}
           transition={{ duration: 0.3 }}
-          className={isOpen ? 'text-white' : 'text-gray-500'}
+          className={isOpen ? 'text-primary' : 'text-gray-500'}
         >
           <ChevronDown className="w-5 h-5" />
         </motion.div>

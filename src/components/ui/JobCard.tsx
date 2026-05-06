@@ -71,7 +71,7 @@ export function JobCard({ icon: Icon, title, type, description, requirements }: 
                   href="https://wa.me/5571991895994" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="inline-flex items-center text-xs font-bold uppercase tracking-widest text-white hover:underline"
+                  className="inline-flex items-center text-xs font-bold uppercase tracking-widest text-primary hover:underline"
                 >
                   Candidatar-se via WhatsApp
                 </a>

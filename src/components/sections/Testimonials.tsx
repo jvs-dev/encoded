@@ -41,7 +41,7 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
                 {[...Array(5)].map((_, i) => (
                   <Star 
                     key={i} 
-                    className={`w-5 h-5 ${i < (testimonial.rating || 5) ? 'fill-white text-white' : 'text-gray-800'}`} 
+                    className={`w-5 h-5 ${i < (testimonial.rating || 5) ? 'fill-primary text-primary' : 'text-gray-800'}`} 
                   />
                 ))}
               </div>

@@ -14,9 +14,9 @@ export function Preloader() {
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.5 }}
-          className="text-4xl font-bold tracking-tighter text-white mb-8 text-center"
+          className="mb-8 flex justify-center"
         >
-          ENCODED<span className="text-gray-500">.</span>
+          <img src="/LogomarcaBranca.svg" alt="INCODED" className="h-16 w-auto" />
         </motion.div>
         
         <div className="w-48 h-[2px] bg-white/10 relative overflow-hidden mx-auto">
@@ -28,7 +28,7 @@ export function Preloader() {
               repeat: Infinity, 
               ease: "easeInOut" 
             }}
-            className="absolute inset-0 bg-white"
+            className="absolute inset-0 bg-primary"
           />
         </div>
       </div>

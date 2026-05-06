@@ -17,25 +17,25 @@ export function Process({ subtitle }: ProcessProps) {
       step: "01",
       title: "Discovery",
       description: "Mergulhamos no seu negócio para entender o público, concorrentes e objetivos reais.",
-      icon: <Search className="w-6 h-6 text-white" />
+      icon: <Search className="w-6 h-6 text-primary" />
     },
     {
       step: "02",
       title: "Design & Estratégia",
       description: "Criamos protótipos de alta fidelidade para você visualizar e aprovar antes do código.",
-      icon: <PenTool className="w-6 h-6 text-white" />
+      icon: <PenTool className="w-6 h-6 text-primary" />
     },
     {
       step: "03",
       title: "Desenvolvimento",
       description: "Codificação limpa, otimizada para SEO e com as melhores tecnologias do mercado.",
-      icon: <Code2 className="w-6 h-6 text-white" />
+      icon: <Code2 className="w-6 h-6 text-primary" />
     },
     {
       step: "04",
       title: "Lançamento",
       description: "Entrega oficial, treinamento da equipe e suporte contínuo para garantir estabilidade.",
-      icon: <Rocket className="w-6 h-6 text-white" />
+      icon: <Rocket className="w-6 h-6 text-primary" />
     }
   ];
 

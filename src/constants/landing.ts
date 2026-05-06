@@ -94,13 +94,13 @@ export const TESTIMONIALS = [
   {
     name: "Carlos Mendes",
     role: "CEO, TechLog",
-    content: "A ENCODED transformou nossa operação. O sistema personalizado que desenvolveram reduziu nosso tempo de processamento em 40%. Profissionalismo ímpar.",
+    content: "A INCODED transformou nossa operação. O sistema personalizado que desenvolveram reduziu nosso tempo de processamento em 40%. Profissionalismo ímpar.",
     avatar: "https://i.pravatar.cc/150?u=carlos"
   },
   {
     name: "Mariana Silva",
     role: "Empreendedora",
-    content: "Comecei meu negócio do zero e o site que a ENCODED fez me deu a credibilidade que eu precisava. Preço acessível e entrega impecável.",
+    content: "Comecei meu negócio do zero e o site que a INCODED fez me deu a credibilidade que eu precisava. Preço acessível e entrega impecável.",
     avatar: "https://i.pravatar.cc/150?u=mariana"
   },
   {

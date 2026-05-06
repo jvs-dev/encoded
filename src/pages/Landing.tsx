@@ -1,4 +1,4 @@
-import { useState, FormEvent, useEffect } from 'react';
+import React, { useState, FormEvent, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { motion, useScroll, useSpring, AnimatePresence } from 'motion/react';
 import { collection, addDoc, serverTimestamp, updateDoc, doc, getDoc } from 'firebase/firestore';
@@ -59,12 +59,12 @@ export default function Landing() {
     heroTitle: 'Engenharia digital para resultados reais.',
     heroSubtitle: 'Consultoria, sites, sistemas e identidade visual. Resolvemos problemas complexos e otimizamos processos para empresas de todos os tamanhos.',
     aboutTitle: 'Para grandes corporações e empreendedores iniciantes.',
-    aboutText: 'A ENCODED nasceu com o propósito de democratizar o acesso à tecnologia e design de alto nível. Entendemos que cada negócio está em um momento diferente.',
+    aboutText: 'A INCODED nasceu com o propósito de democratizar o acesso à tecnologia e design de alto nível. Entendemos que cada negócio está em um momento diferente.',
     aboutImage: 'https://images.unsplash.com/photo-1551434678-e076c223a692?q=80&w=2070&auto=format&fit=crop',
     heroVideoUrl: '/videowork.mp4',
     servicesSubtitle: 'Soluções completas de ponta a ponta. Do design estratégico ao desenvolvimento de sistemas complexos.',
     processSubtitle: 'Transparência e previsibilidade do primeiro contato ao lançamento. Sem surpresas, apenas resultados.',
-    portfolioSubtitle: 'Um vislumbre do que construímos para marcas que confiam na ENCODED.',
+    portfolioSubtitle: 'Um vislumbre do que construímos para marcas que confiam na INCODED.',
     contactSubtitle: 'Preencha o formulário ao lado ou entre em contato diretamente pelos nossos canais. Nossa equipe retornará o mais breve possível com uma proposta customizada.',
     packagesSubtitle: 'Escolha a solução ideal para colocar sua empresa em um novo patamar agora.',
     roiSubtitle: 'Ter uma presença digital é obrigatório, mas ter uma presença digital ineficiente pode estar drenando silenciosamente o seu faturamento mensal.'
@@ -194,7 +194,7 @@ export default function Landing() {
             Email: formData.email,
             Telefone: formData.phone || 'Não informado',
             Mensagem: formData.message,
-            _subject: "Novo contato pelo site ENCODED!"
+            _subject: "Novo contato pelo site INCODED!"
         })
       });
 
@@ -230,9 +230,9 @@ export default function Landing() {
       </AnimatePresence>
 
       <Helmet>
-        <title>ENCODED | Engenharia Digital para Resultados Reais</title>
+        <title>INCODED | Marketing e Tecnologia</title>
         <meta name="description" content={siteContent.heroSubtitle} />
-        <meta name="keywords" content="agência digital, criação de sites, desenvolvimento de sistemas, identidade visual, social media, consultoria digital, sites personalizados, ENCODED" />
+        <meta name="keywords" content="agência digital, criação de sites, desenvolvimento de sistemas, identidade visual, social media, consultoria digital, sites personalizados, INCODED" />
         
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://encoded.com.br/" />

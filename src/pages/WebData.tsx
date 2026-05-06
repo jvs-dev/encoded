@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
+import { AdminNav } from '../components/layout/AdminNav';
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
 } from 'recharts';
@@ -11,17 +12,6 @@ import { collection, getDocs, query, where, Timestamp, doc, getDoc } from 'fireb
 import { db, auth, googleProvider } from '../firebase';
 import { signInWithPopup, signOut, onAuthStateChanged, User } from 'firebase/auth';
 import { LayoutDashboard, Calendar } from 'lucide-react';
-
-const AdminNav = () => (
-  <div className="flex space-x-6 mr-8 border-r border-white/10 pr-8">
-    <a href="/dashboard" className="text-sm font-medium text-gray-400 hover:text-white transition-colors flex items-center">
-      <LayoutDashboard className="w-4 h-4 mr-2" /> Conteúdo
-    </a>
-    <a href="/webdata" className="text-sm font-bold text-white flex items-center">
-      <Activity className="w-4 h-4 mr-2" /> Analytics
-    </a>
-  </div>
-);
 
 const mockVisitsData = [
   { name: 'Seg', visitas: 120 },
@@ -49,6 +39,7 @@ const mockTopButtons = [
 
 export default function WebData() {
   const [user, setUser] = useState<User | null>(null);
+  const [isAdminUser, setIsAdminUser] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [dateFilter, setDateFilter] = useState<'today' | '7days' | '30days' | 'year'>('7days');
@@ -70,20 +61,22 @@ export default function WebData() {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
       if (currentUser) {
-        setUser(currentUser);
+        setIsAdminUser(currentUser.email === "jvssilv4@gmail.com");
       } else {
-        setUser(null);
+        setIsAdminUser(false);
       }
     });
     return () => unsubscribe();
   }, []);
 
   useEffect(() => {
-    if (!user) return;
+    if (!user || !isAdminUser) return;
 
     const fetchData = async () => {
       setLoading(true);
+      setError('');
       try {
         const startDate = new Date();
         if (dateFilter === 'today') startDate.setHours(0, 0, 0, 0);
@@ -196,8 +189,9 @@ export default function WebData() {
           .slice(0, 4)
           .map(s => s.name.charAt(0).toUpperCase() + s.name.slice(1)));
 
-      } catch (e) {
+      } catch (e: any) {
         console.error(e);
+        setError(`Erro ao carregar dados: ${e.message || 'Permissão insuficiente'}`);
       } finally {
         setLoading(false);
       }
@@ -223,7 +217,7 @@ export default function WebData() {
     }
   };
 
-  if (!user) {
+  if (!user || !isAdminUser) {
     return (
       <div className="min-h-screen bg-black text-white flex items-center justify-center p-4">
         <motion.div 
@@ -238,15 +232,24 @@ export default function WebData() {
           </div>
           <h1 className="text-2xl font-bold text-center mb-2">Acesso Restrito</h1>
           <p className="text-gray-400 text-center mb-8 text-sm">
-            Faça login com sua conta Google autorizada para acessar os insights do site.
+            {user ? "Você não tem permissão para acessar esta ferramenta." : "Faça login com sua conta Google autorizada para acessar os insights do site."}
           </p>
           
-          <button
-            onClick={handleLogin}
-            className="w-full bg-white text-black font-bold py-3 hover:bg-gray-200 transition-colors flex items-center justify-center"
-          >
-            Entrar com Google
-          </button>
+          {!user ? (
+            <button
+              onClick={handleLogin}
+              className="w-full bg-white text-black font-bold py-3 hover:bg-gray-200 transition-colors flex items-center justify-center"
+            >
+              Entrar com Google
+            </button>
+          ) : (
+            <button
+              onClick={handleLogout}
+              className="w-full bg-zinc-900 text-white font-bold py-3 hover:bg-zinc-800 transition-colors flex items-center justify-center"
+            >
+              Sair da Conta
+            </button>
+          )}
           
           {error && <p className="text-red-400 text-sm text-center mt-4">{error}</p>}
           
@@ -266,14 +269,14 @@ export default function WebData() {
       <header className="bg-zinc-950 border-b border-white/10 fixed top-0 left-0 right-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
           <div className="flex items-center">
-            <span className="font-bold text-xl tracking-tighter mr-4">ENCODED<span className="text-gray-500">.</span></span>
+            <img src="/LogomarcaBranca.svg" alt="INCODED" className="h-6 w-auto mr-4" />
             <span className="text-gray-500 hidden sm:inline">|</span>
             <span className="ml-4 font-medium text-sm tracking-widest uppercase text-gray-300 flex items-center">
               <Activity className="w-4 h-4 mr-2" /> Web Analytics
             </span>
           </div>
           <div className="flex items-center">
-            <AdminNav />
+            <AdminNav activeTab="analytics" />
             <button onClick={handleLogout} className="text-sm text-gray-400 hover:text-white transition-colors flex items-center">
               Sair <ArrowLeft className="w-4 h-4 ml-2 rotate-180" />
             </button>
@@ -282,6 +285,18 @@ export default function WebData() {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12">
+        {error && (
+          <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-lg flex items-center gap-3 text-red-500">
+            <Activity className="w-5 h-5 flex-shrink-0" />
+            <p className="text-sm">{error}</p>
+            <button 
+              onClick={() => { setError(''); window.location.reload(); }}
+              className="ml-auto text-xs font-bold uppercase tracking-widest underline"
+            >
+              Recarregar
+            </button>
+          </div>
+        )}
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-10 gap-4">
           <div>
             <h1 className="text-3xl font-bold mb-2">Visão Geral</h1>

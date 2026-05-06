@@ -56,9 +56,9 @@ export function Packages({ subtitle, packages, onTrackClick }: PackagesProps) {
     <section id="pacotes" className="packages py-32 bg-black border-t border-white/5 relative overflow-hidden">
       {/* Background growth indicator graphics */}
       <div className="absolute inset-0 z-0 pointer-events-none opacity-5">
-        <TrendingUp className="absolute top-20 right-[10%] w-64 h-64 text-green-500 rotate-12" />
-        <TrendingUp className="absolute bottom-20 left-[5%] w-96 h-96 text-green-500 -rotate-12" />
-        <TrendingUp className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] text-green-500/5 rotate-12" />
+        <TrendingUp className="absolute top-20 right-[10%] w-64 h-64 text-primary rotate-12" />
+        <TrendingUp className="absolute bottom-20 left-[5%] w-96 h-96 text-primary -rotate-12" />
+        <TrendingUp className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] text-primary/5 rotate-12" />
       </div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <SectionTitle align="center" subtitle={subtitle}>
@@ -75,10 +75,10 @@ export function Packages({ subtitle, packages, onTrackClick }: PackagesProps) {
               transition={{ duration: 0.5, delay: (index + 1) * 0.1 }}
               className={`h-full relative ${index === 1 ? 'z-20' : 'z-0'}`}
             >
-              <GlowCard className={`h-full !p-0 !overflow-visible transition-all duration-500 ${index === 1 ? 'border-2 border-white shadow-[0_0_50px_rgba(255,255,255,0.1)] md:scale-105' : 'opacity-80 hover:opacity-100'}`}>
+              <GlowCard className={`h-full !p-0 !overflow-visible transition-all duration-500 ${index === 1 ? 'border-2 border-primary shadow-[0_0_50px_rgba(124,58,237,0.2)] md:scale-105' : 'opacity-80 hover:opacity-100'}`}>
                 <div className="p-6 md:p-8 lg:p-8 flex flex-col h-full relative">
                   {index === 1 && (
-                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-white text-black text-[10px] font-black px-4 py-1.5 uppercase tracking-[0.2em] shadow-xl z-20">
+                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary text-white text-[10px] font-black px-4 py-1.5 uppercase tracking-[0.2em] shadow-xl z-20 rounded-full">
                       Recomendado
                     </div>
                   )}
@@ -94,7 +94,7 @@ export function Packages({ subtitle, packages, onTrackClick }: PackagesProps) {
                   <ul className="packages__feature-list space-y-4 mb-8 flex-grow">
                     {(pkg.features || defaultFeatures[index]).map((feature, fIndex) => (
                       <li key={fIndex} className="flex items-start">
-                        <CheckCircle2 className="w-5 h-5 text-white mr-3 shrink-0" />
+                        <CheckCircle2 className="w-5 h-5 text-primary mr-3 shrink-0" />
                         <span className="text-gray-300 text-sm leading-tight">{feature}</span>
                       </li>
                     ))}
@@ -119,10 +119,10 @@ export function Packages({ subtitle, packages, onTrackClick }: PackagesProps) {
 
                   <a 
                     onClick={() => onTrackClick(`Quero este pacote (${pkg.title})`)} 
-                    href={`https://wa.me/5571991895994?text=${encodeURIComponent(`Olá! Vi o site da ENCODED e gostaria de saber mais sobre o pacote: ${pkg.title}`)}`} 
+                    href={`https://wa.me/5571991895994?text=${encodeURIComponent(`Olá! Vi o site da INCODED e gostaria de saber mais sobre o pacote: ${pkg.title}`)}`} 
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={`w-full text-center py-4 font-black tracking-widest uppercase text-sm transition-all active:scale-95 ${index === 1 ? 'bg-white text-black hover:bg-gray-200' : 'bg-transparent border border-white text-white hover:bg-white hover:text-black'}`}
+                    className={`w-full text-center py-4 font-black tracking-widest uppercase text-sm transition-all active:scale-95 rounded-sm ${index === 1 ? 'bg-primary text-white hover:bg-primary-dark shadow-lg shadow-primary/20' : 'bg-transparent border border-primary/40 text-white hover:bg-primary hover:border-primary hover:text-white'}`}
                   >
                     {index === 2 ? 'Consultar Especialista' : 'Iniciar agora'}
                   </a>

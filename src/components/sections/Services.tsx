@@ -51,7 +51,7 @@ export function Services({ subtitle, services, onSelectService, onTrackClick }: 
               <GlowCard className="h-full relative overflow-hidden">
                 {service.promo && <PromoBadge />}
                 
-                <div className="mb-6 text-white group-hover:scale-110 transition-transform origin-left">
+                <div className="mb-6 text-primary group-hover:scale-110 transition-transform origin-left">
                   {service.icon || getIcon(service.iconName || defaultIconNames[index % defaultIconNames.length])}
                 </div>
                 
@@ -81,9 +81,9 @@ export function Services({ subtitle, services, onSelectService, onTrackClick }: 
             href="https://wa.me/5571991895994" 
             target="_blank" 
             rel="noopener noreferrer" 
-            className="inline-flex items-center text-white font-bold hover:underline"
+            className="inline-flex items-center bg-primary text-white px-8 py-4 rounded-full font-bold hover:bg-primary-dark transition-all shadow-xl shadow-primary/20 active:scale-95"
           >
-            Quero mais informações <ArrowRight className="ml-2 w-4 h-4" />
+            Quero mais informações <ArrowRight className="ml-2 w-5 h-5" />
           </a>
         </div>
       </div>

@@ -27,7 +27,7 @@ export function Footer({ onOpenPrivacy }: FooterProps) {
         <div className="grid md:grid-cols-4 gap-12 mb-16">
           <div className="col-span-2">
             <div className="footer__logo mb-6">
-              <span className="font-bold text-2xl tracking-tighter">ENCODED<span className="text-gray-500">.</span></span>
+              <img src="/LogomarcaBranca.svg" alt="INCODED" className="h-10 w-auto" />
             </div>
             <p className="text-gray-400 max-w-sm leading-relaxed">
               Transformamos ideias em realidade digital através de engenharia de software e design de alto nível. Soluções focadas em resultados e escala.
@@ -61,7 +61,7 @@ export function Footer({ onOpenPrivacy }: FooterProps) {
         
         <div className="footer__bottom pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
           <p className="text-gray-500 text-sm">
-            © {new Date().getFullYear()} ENCODED. Todos os direitos reservados.
+            © {new Date().getFullYear()} INCODED. Todos os direitos reservados.
           </p>
           <div className="flex space-x-8">
             <button onClick={onOpenPrivacy} className="text-gray-500 hover:text-white text-sm transition-colors">Política de Privacidade</button>

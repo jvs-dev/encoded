@@ -7,9 +7,9 @@ import { useState, useEffect } from 'react';
  */
 export function Typewriter() {
   const phrases = [
-    "Engenharia digital para resultados reais.",
-    "Engenharia digital para escalar suas vendas.",
-    "Engenharia digital para seu negócio."
+    `Engenharia digital para resultados reais.`,
+    `Engenharia digital para escalar suas vendas.`,
+    `Engenharia digital para seu negócio.`
   ];
   
   const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0);

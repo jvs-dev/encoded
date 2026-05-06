@@ -28,7 +28,7 @@ export function Navbar({ activeSection }: NavbarProps) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
             <div className="navbar__logo flex-shrink-0 flex items-center">
-              <span className="font-bold text-2xl tracking-tighter">ENCODED<span className="text-gray-500">.</span></span>
+              <img src="/LogomarcaBranca.svg" alt="INCODED" className="h-8 w-auto" />
             </div>
             
             {/* Desktop Menu */}
@@ -44,7 +44,7 @@ export function Navbar({ activeSection }: NavbarProps) {
               ))}
               <a 
                 href="#contato" 
-                className={`navbar__button px-5 py-2.5 text-sm font-bold transition-colors ${activeSection === 'contato' ? 'bg-gray-200 text-black' : 'bg-white text-black hover:bg-gray-200'}`}
+                className={`navbar__button px-5 py-2.5 text-sm font-bold transition-all rounded-none border ${activeSection === 'contato' ? 'bg-primary-dark text-white border-primary-dark' : 'bg-primary text-white hover:bg-primary-dark border-primary shadow-lg shadow-primary/20'}`}
               >
                 Fale Conosco
               </a>
@@ -88,7 +88,7 @@ export function Navbar({ activeSection }: NavbarProps) {
                 <a 
                   href="#contato" 
                   onClick={() => setIsMenuOpen(false)} 
-                  className={`block px-4 py-4 text-lg font-black text-black bg-white mt-6 text-center rounded-lg active:scale-95 transition-all ${activeSection === 'contato' ? 'bg-gray-200' : ''}`}
+                  className={`block px-4 py-4 text-lg font-black text-white bg-primary mt-6 text-center rounded-lg active:scale-95 transition-all ${activeSection === 'contato' ? 'bg-primary-dark' : ''}`}
                 >
                   Fale Conosco
                 </a>

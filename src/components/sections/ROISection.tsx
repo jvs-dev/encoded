@@ -49,7 +49,7 @@ export const ROISection: React.FC<ROISectionProps> = ({ subtitle, items }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8">
           <div className="max-w-2xl">
-            <span className="text-red-500 font-black tracking-[0.3em] uppercase text-xs mb-4 block">
+            <span className="text-primary font-black tracking-[0.3em] uppercase text-xs mb-4 block">
               Análise de Risco Digital
             </span>
             <h2 className="text-4xl md:text-6xl font-bold tracking-tighter leading-tight mb-6">
@@ -73,7 +73,7 @@ export const ROISection: React.FC<ROISectionProps> = ({ subtitle, items }) => {
             >
               <div className="mb-6 md:mb-8">{item.icon}</div>
               <h3 className="text-xs sm:text-sm font-black tracking-widest text-white/40 uppercase mb-4">{item.title}</h3>
-              <p className="text-xl sm:text-2xl font-bold mb-6 text-white leading-tight group-hover:text-red-500 transition-colors">
+              <p className="text-xl sm:text-2xl font-bold mb-6 text-white leading-tight group-hover:text-primary transition-colors">
                 {item.problem}
               </p>
               <p className="text-gray-500 leading-relaxed text-sm sm:text-base">
@@ -84,17 +84,17 @@ export const ROISection: React.FC<ROISectionProps> = ({ subtitle, items }) => {
         </div>
 
         <div className="mt-12 md:mt-16 bg-black border border-white/10 p-6 sm:p-8 md:p-12 text-white flex flex-col md:flex-row items-center justify-between gap-8 rounded-2xl relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-1 h-full bg-red-500 md:w-1 md:h-full"></div>
-          <div className="absolute top-0 left-0 w-full h-1 bg-red-500 md:hidden"></div>
+          <div className="absolute top-0 left-0 w-1 h-full bg-primary md:w-1 md:h-full"></div>
+          <div className="absolute top-0 left-0 w-full h-1 bg-primary md:hidden"></div>
           <div className="max-w-xl text-center md:text-left">
             <h3 className="text-2xl sm:text-3xl font-black tracking-tighter mb-2">Pare de perder oportunidades.</h3>
             <p className="text-gray-400 font-medium text-sm sm:text-base">Nossa engenharia foca em estancar esses vazamentos e transformar seu digital em uma máquina de lucro.</p>
           </div>
           <a 
-            href={`https://wa.me/5571991895994?text=${encodeURIComponent('Olá! Quero fazer uma análise do meu ROI digital e entender como a ENCODED pode me ajudar.')}`}
+            href={`https://wa.me/5571991895994?text=${encodeURIComponent('Olá! Quero fazer uma análise do meu ROI digital e entender como a INCODED pode me ajudar.')}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full md:w-auto inline-flex items-center justify-center bg-white text-black px-10 py-5 font-black uppercase tracking-widest text-sm hover:bg-gray-200 transition-all active:scale-95 whitespace-nowrap"
+            className="w-full md:w-auto inline-flex items-center justify-center bg-primary text-white px-10 py-5 font-black uppercase tracking-widest text-sm hover:bg-primary-dark transition-all active:scale-95 whitespace-nowrap rounded-sm shadow-xl shadow-primary/20"
           >
             Análise Gratuita
             <ArrowRight className="ml-3 w-5 h-5" />

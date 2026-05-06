@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
+@theme {
+  --color-primary: #7C3AED;
+  --color-primary-dark: #6D28D9;
+  --color-brand-purple: #7C3AED;
+}
+
 html, body {
   overflow-x: hidden;
   width: 100%;

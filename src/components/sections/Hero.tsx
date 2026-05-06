@@ -39,6 +39,8 @@ export function Hero({ subtitle, videoUrl, onTrackClick }: HeroProps) {
         </video>
         <div className="absolute inset-0 bg-black/60"></div>
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/40 to-black"></div>
+        <div className="absolute -top-[30%] -right-[10%] w-[60%] h-[80%] bg-primary/20 blur-[120px] rounded-full pointer-events-none"></div>
+        <div className="absolute -bottom-[20%] -left-[10%] w-[50%] h-[70%] bg-primary/10 blur-[100px] rounded-full pointer-events-none"></div>
       </div>
       
       <div className="hero__content max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
@@ -58,19 +60,19 @@ export function Hero({ subtitle, videoUrl, onTrackClick }: HeroProps) {
             <div className="hero__actions flex flex-col sm:flex-row gap-4 mb-8">
               <a 
                 onClick={() => onTrackClick('Solicitar Orçamento (Hero)')} 
-                href={`https://wa.me/5571991895994?text=${encodeURIComponent('Olá! Vi o site da ENCODED e gostaria de impulsionar meu negócio com um projeto de alto nível.')}`} 
+                href={`https://wa.me/5571991895994?text=${encodeURIComponent('Olá! Vi o site da INCODED e gostaria de impulsionar meu negócio com um projeto de alto nível.')}`} 
                 target="_blank" 
                 rel="noopener noreferrer" 
-                className="inline-flex justify-center items-center bg-white text-black px-8 py-4 font-bold text-lg hover:bg-gray-200 transition-all group relative overflow-hidden active:scale-95"
+                className="inline-flex justify-center items-center bg-primary text-white px-8 py-4 font-bold text-lg hover:bg-primary-dark transition-all group relative overflow-hidden active:scale-95 sm:flex-1 md:flex-none rounded-sm shadow-xl shadow-primary/20"
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
                 Impulsionar Meu Negócio
                 <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </a>
               <a 
                 onClick={() => onTrackClick('Ver Serviços (Hero)')} 
                 href="#servicos" 
-                className="inline-flex justify-center items-center border border-white/20 text-white px-8 py-4 font-bold text-lg hover:bg-white/5 transition-colors active:scale-95"
+                className="inline-flex justify-center items-center border border-white/20 text-white px-8 py-4 font-bold text-lg hover:bg-white/5 transition-colors active:scale-95 sm:flex-1 md:flex-none"
               >
                 Ver Serviços
               </a>

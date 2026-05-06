@@ -3,21 +3,11 @@ import { db, auth, googleProvider } from '../firebase';
 import { doc, getDoc, setDoc, collection, getDocs, deleteDoc, query, orderBy } from 'firebase/firestore';
 import { signInWithPopup, signOut, onAuthStateChanged, User } from 'firebase/auth';
 import { motion } from 'motion/react';
-import { Lock, Save, LogOut, ArrowLeft, Loader2, LayoutDashboard, Activity, Users, MessageSquare, Trash2, Plus, ChevronDown, Check, AlertCircle } from 'lucide-react';
+import { AdminNav } from '../components/layout/AdminNav';
+import { Lock, Save, LogOut, ArrowLeft, Loader2, LayoutDashboard, Activity, Users, MessageSquare, Trash2, Plus, ChevronDown, ChevronLeft, ChevronRight, Check, AlertCircle } from 'lucide-react';
 import { ICON_LIST, getIcon } from '../lib/icons';
 
 const CONTENT_ID = 'main';
-
-const AdminNav = () => (
-  <div className="flex space-x-6 mr-8 border-r border-white/10 pr-8">
-    <a href="/dashboard" className="text-sm font-bold text-white flex items-center">
-      <LayoutDashboard className="w-4 h-4 mr-2" /> Conteúdo
-    </a>
-    <a href="/webdata" className="text-sm font-medium text-gray-400 hover:text-white transition-colors flex items-center">
-      <Activity className="w-4 h-4 mr-2" /> Analytics
-    </a>
-  </div>
-);
 
 export default function Dashboard() {
   const [user, setUser] = useState<User | null>(null);
@@ -29,6 +19,8 @@ export default function Dashboard() {
   
   // Leads state
   const [leads, setLeads] = useState<any[]>([]);
+  const [currentPageLeads, setCurrentPageLeads] = useState(1);
+  const pageSizeLeads = 6;
   
   // Admins state
   const [admins, setAdmins] = useState<any[]>([]);
@@ -39,12 +31,12 @@ export default function Dashboard() {
     heroTitle: 'Engenharia digital para resultados reais.',
     heroSubtitle: 'Consultoria, sites, sistemas e identidade visual. Resolvemos problemas complexos e otimizamos processos para empresas de todos os tamanhos.',
     aboutTitle: 'Para grandes corporações e empreendedores iniciantes.',
-    aboutText: 'A ENCODED nasceu com o propósito de democratizar o acesso à tecnologia e design de alto nível. Entendemos que cada negócio está em um momento diferente.',
+    aboutText: 'A INCODED nasceu com o propósito de democratizar o acesso à tecnologia e design de alto nível. Entendemos que cada negócio está em um momento diferente.',
     aboutImage: 'https://images.unsplash.com/photo-1551434678-e076c223a692?q=80&w=2070&auto=format&fit=crop',
     heroVideoUrl: '/videowork.mp4',
     servicesSubtitle: 'Soluções completas de ponta a ponta. Do design estratégico ao desenvolvimento de sistemas complexos.',
     processSubtitle: 'Transparência e previsibilidade do primeiro contato ao lançamento. Sem surpresas, apenas resultados.',
-    portfolioSubtitle: 'Um vislumbre do que construímos para marcas que confiam na ENCODED.',
+    portfolioSubtitle: 'Um vislumbre do que construímos para marcas que confiam na INCODED.',
     contactSubtitle: 'Preencha o formulário ao lado ou entre em contato diretamente pelos nossos canais. Nossa equipe retornará o mais breve possível com uma proposta customizada.',
     faqSubtitle: 'Tire suas dúvidas e entenda como podemos ajudar o seu negócio a crescer.',
     faqs: [
@@ -65,14 +57,14 @@ export default function Dashboard() {
       {
         name: "Carlos Mendes",
         role: "CEO, TechLog",
-        content: "A ENCODED transformou nossa operação. O sistema personalizado que desenvolveram reduziu nosso tempo de processamento em 40%. Profissionalismo ímpar.",
+        content: "A INCODED transformou nossa operação. O sistema personalizado que desenvolveram reduziu nosso tempo de processamento em 40%. Profissionalismo ímpar.",
         avatar: "https://i.pravatar.cc/150?u=carlos",
         rating: 5
       },
       {
         name: "Mariana Silva",
         role: "Empreendedora",
-        content: "Comecei meu negócio do zero e o site que a ENCODED fez me deu a credibilidade que a eu precisava. Preço acessível e entrega impecável.",
+        content: "Comecei meu negócio do zero e o site que a INCODED fez me deu a credibilidade que a eu precisava. Preço acessível e entrega impecável.",
         avatar: "https://i.pravatar.cc/150?u=mariana",
         rating: 5
       }
@@ -90,7 +82,7 @@ export default function Dashboard() {
       { title: "E-commerce de Luxo", img: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?q=80&w=2070&auto=format&fit=crop" }
     ],
     portfolioLogos: [
-      { title: "Branding ENCODED", img: "https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=2071&auto=format&fit=crop" },
+      { title: "Branding INCODED", img: "https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=2071&auto=format&fit=crop" },
       { title: "Logotipo TechWave", img: "https://images.unsplash.com/photo-1599305090598-fe179d501227?q=80&w=2069&auto=format&fit=crop" },
       { title: "Visual ID Spark", img: "https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=2070&auto=format&fit=crop" }
     ],
@@ -189,27 +181,24 @@ export default function Dashboard() {
 
   const handleRemoveAdmin = async (email: string) => {
     if (email === 'jvssilv4@gmail.com') {
-      alert('Não é possível remover o administrador principal.');
+      setError('Não é possível remover o administrador principal.');
       return;
     }
-    if (window.confirm(`Remover ${email} dos administradores?`)) {
-      try {
-        await deleteDoc(doc(db, 'admins', email));
-        fetchAdmins();
-      } catch (err) {
-        setError('Erro ao remover administrador.');
-      }
+    
+    try {
+      await deleteDoc(doc(db, 'admins', email));
+      fetchAdmins();
+    } catch (err) {
+      setError('Erro ao remover administrador.');
     }
   };
 
   const handleDeleteLead = async (id: string) => {
-    if (window.confirm('Tem certeza que deseja excluir este lead?')) {
-      try {
-        await deleteDoc(doc(db, 'leads', id));
-        fetchLeads();
-      } catch (err) {
-        setError('Erro ao excluir lead.');
-      }
+    try {
+      await deleteDoc(doc(db, 'leads', id));
+      fetchLeads();
+    } catch (err) {
+      setError('Erro ao excluir lead.');
     }
   };
 
@@ -441,12 +430,12 @@ export default function Dashboard() {
       <header className="bg-zinc-950 border-b border-white/10 fixed top-0 left-0 right-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
           <div className="flex items-center">
-            <span className="font-bold text-xl tracking-tighter mr-4">ENCODED<span className="text-gray-500">.</span></span>
+            <img src="/LogomarcaBranca.svg" alt="INCODED" className="h-6 w-auto mr-4" />
             <span className="text-gray-500 hidden sm:inline">|</span>
             <span className="ml-4 font-medium text-sm tracking-widest uppercase text-gray-300">CMS Dashboard</span>
           </div>
           <div className="flex items-center">
-            <AdminNav />
+            <AdminNav activeTab="content" />
             <button 
               onClick={handleSave}
               disabled={saving || activeTab !== 'content'}
@@ -1224,46 +1213,72 @@ export default function Dashboard() {
               <h2 className="text-lg font-bold mb-6 border-b border-white/5 pb-4 flex items-center">
                 <MessageSquare className="w-5 h-5 mr-2" /> Contatos Recebidos
               </h2>
-              {leads.length === 0 ? (
+      {leads.length === 0 ? (
                 <p className="text-gray-500 text-center py-8">Nenhum contato recebido ainda.</p>
               ) : (
-                <div className="space-y-4">
-                  {leads.map(lead => (
-                    <div key={lead.id} className="p-4 border border-white/5 bg-black relative group">
-                      <button 
-                        onClick={() => handleDeleteLead(lead.id)}
-                        className="absolute top-4 right-4 text-gray-500 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
-                        title="Excluir"
+                <>
+                  <div className="space-y-4">
+                    {leads.slice((currentPageLeads - 1) * pageSizeLeads, currentPageLeads * pageSizeLeads).map(lead => (
+                      <div key={lead.id} className="p-4 border border-white/5 bg-black relative group">
+                        <button 
+                          onClick={() => handleDeleteLead(lead.id)}
+                          className="absolute top-4 right-4 text-gray-500 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
+                          title="Excluir"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                        <div className="grid md:grid-cols-2 gap-4 mb-4">
+                          <div>
+                            <p className="text-xs text-gray-500 uppercase tracking-widest mb-1">Nome</p>
+                            <p className="font-bold">{lead.name}</p>
+                          </div>
+                          <div>
+                            <p className="text-xs text-gray-500 uppercase tracking-widest mb-1">Data</p>
+                            <p className="text-gray-300">
+                              {lead.createdAt?.toDate ? lead.createdAt.toDate().toLocaleString('pt-BR') : 'Data desconhecida'}
+                            </p>
+                          </div>
+                          <div>
+                            <p className="text-xs text-gray-500 uppercase tracking-widest mb-1">Email</p>
+                            <a href={`mailto:${lead.email}`} className="text-blue-400 hover:underline">{lead.email}</a>
+                          </div>
+                          <div>
+                            <p className="text-xs text-gray-500 uppercase tracking-widest mb-1">Telefone</p>
+                            <p className="text-gray-300">{lead.phone || 'Não informado'}</p>
+                          </div>
+                        </div>
+                        <div className="pt-4 border-t border-white/5">
+                          <p className="text-xs text-gray-500 uppercase tracking-widest mb-2">Mensagem</p>
+                          <p className="text-gray-300 whitespace-pre-wrap">{lead.message}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {leads.length > pageSizeLeads && (
+                    <div className="mt-8 flex justify-center items-center gap-4">
+                      <button
+                        onClick={() => setCurrentPageLeads(prev => Math.max(1, prev - 1))}
+                        disabled={currentPageLeads === 1}
+                        className="p-2 border border-white/10 rounded-lg hover:bg-white/5 disabled:opacity-20 transition-all"
                       >
-                        <Trash2 className="w-4 h-4" />
+                        <ChevronLeft className="w-5 h-5" />
                       </button>
-                      <div className="grid md:grid-cols-2 gap-4 mb-4">
-                        <div>
-                          <p className="text-xs text-gray-500 uppercase tracking-widest mb-1">Nome</p>
-                          <p className="font-bold">{lead.name}</p>
-                        </div>
-                        <div>
-                          <p className="text-xs text-gray-500 uppercase tracking-widest mb-1">Data</p>
-                          <p className="text-gray-300">
-                            {lead.createdAt?.toDate ? lead.createdAt.toDate().toLocaleString('pt-BR') : 'Data desconhecida'}
-                          </p>
-                        </div>
-                        <div>
-                          <p className="text-xs text-gray-500 uppercase tracking-widest mb-1">Email</p>
-                          <a href={`mailto:${lead.email}`} className="text-blue-400 hover:underline">{lead.email}</a>
-                        </div>
-                        <div>
-                          <p className="text-xs text-gray-500 uppercase tracking-widest mb-1">Telefone</p>
-                          <p className="text-gray-300">{lead.phone || 'Não informado'}</p>
-                        </div>
-                      </div>
-                      <div className="pt-4 border-t border-white/5">
-                        <p className="text-xs text-gray-500 uppercase tracking-widest mb-2">Mensagem</p>
-                        <p className="text-gray-300 whitespace-pre-wrap">{lead.message}</p>
-                      </div>
+                      
+                      <span className="text-sm font-medium text-gray-400">
+                        Página {currentPageLeads} de {Math.ceil(leads.length / pageSizeLeads)}
+                      </span>
+
+                      <button
+                        onClick={() => setCurrentPageLeads(prev => Math.min(Math.ceil(leads.length / pageSizeLeads), prev + 1))}
+                        disabled={currentPageLeads === Math.ceil(leads.length / pageSizeLeads)}
+                        className="p-2 border border-white/10 rounded-lg hover:bg-white/5 disabled:opacity-20 transition-all"
+                      >
+                        <ChevronRight className="w-5 h-5" />
+                      </button>
                     </div>
-                  ))}
-                </div>
+                  )}
+                </>
               )}
             </section>
           </div>

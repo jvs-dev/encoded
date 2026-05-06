@@ -51,7 +51,7 @@ export function About({ title, text, imageUrl }: AboutProps) {
                   "Entregas focadas em conversão e usabilidade"
                 ].map((item, i) => (
                   <li key={i} className="flex items-start">
-                    <CheckCircle2 className="w-6 h-6 text-white mr-3 flex-shrink-0" />
+                    <CheckCircle2 className="w-6 h-6 text-primary mr-3 flex-shrink-0" />
                     <span className="text-gray-300">{item}</span>
                   </li>
                 ))}
@@ -72,7 +72,7 @@ export function About({ title, text, imageUrl }: AboutProps) {
                 referrerPolicy="no-referrer"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent flex flex-col justify-end p-8 pointer-events-none">
-                <div className="w-full h-1 bg-gradient-to-r from-white to-transparent mb-6"></div>
+                <div className="w-full h-1 bg-gradient-to-r from-primary to-transparent mb-6"></div>
                 <h3 className="text-2xl font-bold mb-3 text-white">Nosso Compromisso</h3>
                 <p className="text-gray-300 text-lg italic">
                   "Não entregamos apenas código ou imagens. Entregamos soluções que geram autoridade, otimizam tempo e aumentam o faturamento dos nossos clientes."
@@ -84,7 +84,7 @@ export function About({ title, text, imageUrl }: AboutProps) {
       </section>
 
       <section className="about__stats py-16 bg-black border-y border-white/5 relative overflow-hidden">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-3xl h-32 bg-white/[0.02] blur-3xl rounded-full pointer-events-none"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-3xl h-32 bg-primary/5 blur-3xl rounded-full pointer-events-none"></div>
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">

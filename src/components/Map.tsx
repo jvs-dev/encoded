@@ -25,7 +25,7 @@ export default function Map() {
         <Marker position={position}>
           <Popup>
             <div className="text-black text-center">
-              <strong>ENCODED</strong><br />
+              <strong>INCODED</strong><br />
               Avenida Luís Viana, 6462<br />
               Paralela, Salvador - BA
             </div>

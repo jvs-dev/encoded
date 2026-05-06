@@ -28,7 +28,7 @@ export function FloatingWhatsApp({ show, onTrackClick }: FloatingWhatsAppProps) 
           initial={{ opacity: 0, scale: 0.5, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.5, y: 20 }}
-          href={`https://wa.me/5571991895994?text=${encodeURIComponent('Olá! Vi o site da ENCODED e gostaria de tirar algumas dúvidas.')}`} 
+          href={`https://wa.me/5571991895994?text=${encodeURIComponent('Olá! Vi o site da INCODED e gostaria de tirar algumas dúvidas.')}`} 
           target="_blank" 
           rel="noopener noreferrer"
           className="fixed bottom-6 right-6 z-50 bg-[#25D366] text-white p-4 rounded-full shadow-lg hover:scale-110 transition-transform flex items-center justify-center group"

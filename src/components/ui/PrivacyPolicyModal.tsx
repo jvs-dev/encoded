@@ -34,7 +34,7 @@ export function PrivacyPolicyModal({ isOpen, onClose }: PrivacyPolicyModalProps)
             
             <div className="modal__body space-y-4 text-gray-300 leading-relaxed text-sm md:text-base">
               <p>
-                A <strong>ENCODED</strong> valoriza e respeita a sua privacidade. Esta política descreve como coletamos, usamos e protegemos suas informações pessoais ao utilizar nosso site.
+                A <strong>INCODED</strong> valoriza e respeita a sua privacidade. Esta política descreve como coletamos, usamos e protegemos suas informações pessoais ao utilizar nosso site.
               </p>
               
               <h3 className="text-lg font-bold text-white mt-6">1. Coleta de Dados</h3>
