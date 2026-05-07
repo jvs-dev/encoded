@@ -4,39 +4,39 @@ import React from 'react';
 export const DEFAULT_SERVICES = [
   {
     icon: React.createElement(Globe, { className: "w-8 h-8" }),
-    title: "Sites Personalizados",
-    description: "Presença digital profissional e otimizada para conversão.",
+    title: "Criação de Sites & Landing Pages",
+    description: "Desenvolvimento de sites e landing pages de alta conversão, otimizados para SEO e vendas.",
     price: "A partir de R$ 150",
     promo: true,
     active: true
   },
   {
     icon: React.createElement(Code2, { className: "w-8 h-8" }),
-    title: "Sistemas Completos",
-    description: "Soluções sob medida para automatizar e otimizar seus processos.",
+    title: "Sistemas Web Sob Medida",
+    description: "Sistemas e aplicações web robustas para automatizar e otimizar os processos da sua empresa.",
     price: "Preço sob consulta",
     active: true
   },
   {
     icon: React.createElement(LayoutTemplate, { className: "w-8 h-8" }),
-    title: "Posts para Redes Sociais",
-    description: "Design estratégico que comunica o valor da sua marca.",
+    title: "Artes & Criativos para Anúncios",
+    description: "Design estratégico de artes e criativos que prendem a atenção e convertem em anúncios.",
     price: "A partir de R$ 10",
     promo: true,
     active: true
   },
   {
     icon: React.createElement(Smartphone, { className: "w-8 h-8" }),
-    title: "Carrossel 5 slides",
-    description: "Conteúdo denso e engajador para o seu Instagram/LinkedIn.",
+    title: "Gestão de Redes Sociais",
+    description: "Conteúdo denso e engajador para o seu Instagram/LinkedIn, focado em autoridade.",
     price: "A partir de R$ 20",
     promo: true,
     active: true
   },
   {
     icon: React.createElement(PenTool, { className: "w-8 h-8" }),
-    title: "Identidade Visual",
-    description: "Construção de marca forte, memorável e coerente.",
+    title: "Identidade Visual & Branding",
+    description: "Construção de marca completa, logotipo e manual de identidade visual memorável.",
     price: "Preço sob consulta",
     active: true
   },

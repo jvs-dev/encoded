@@ -7,9 +7,10 @@ import { useState, useEffect } from 'react';
  */
 export function Typewriter() {
   const phrases = [
-    `Engenharia digital para resultados reais.`,
-    `Engenharia digital para escalar suas vendas.`,
-    `Engenharia digital para seu negócio.`
+    `Marketing digital para resultados reais.`,
+    `Sites e Landing Pages para escalar vendas.`,
+    `Branding e Artes para o seu negócio.`,
+    `Engenharia digital para performance.`
   ];
   
   const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0);

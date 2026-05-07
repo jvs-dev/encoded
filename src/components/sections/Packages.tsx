@@ -78,8 +78,8 @@ export function Packages({ subtitle, packages, onTrackClick }: PackagesProps) {
               <GlowCard className={`h-full !p-0 !overflow-visible transition-all duration-500 ${index === 1 ? 'border-2 border-primary shadow-[0_0_50px_rgba(124,58,237,0.2)] md:scale-105' : 'opacity-80 hover:opacity-100'}`}>
                 <div className="p-6 md:p-8 lg:p-8 flex flex-col h-full relative">
                   {index === 1 && (
-                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary text-white text-[10px] font-black px-4 py-1.5 uppercase tracking-[0.2em] shadow-xl z-20 rounded-full">
-                      Recomendado
+                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary text-white text-[10px] font-black px-4 py-1.5 uppercase tracking-[0.2em] shadow-xl z-20 rounded-full w-max">
+                      Mais adquirido
                     </div>
                   )}
                   <h3 className="text-2xl font-bold mb-2">{pkg.title}</h3>

@@ -71,6 +71,7 @@ export function About({ title, text, imageUrl }: AboutProps) {
                 loop
                 muted
                 playsInline
+                title="Processo de trabalho na INCODED Agência Digital"
                 className="w-full h-full object-cover grayscale opacity-60 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent flex flex-col justify-end p-8 pointer-events-none">

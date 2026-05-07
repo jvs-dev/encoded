@@ -47,13 +47,13 @@ export function Contact({ subtitle, formData, formStatus, onFormSubmit, onFormDa
             </p>
             
             <div className="space-y-6">
-              <a href="mailto:encoded.ofc@gmail.com" className="flex items-center text-gray-300 hover:text-white transition-colors group">
+              <a href="mailto:incoded.ofc@gmail.com" className="flex items-center text-gray-300 hover:text-white transition-colors group">
                 <div className="w-12 h-12 bg-white/5 border border-white/10 flex items-center justify-center mr-4 group-hover:bg-white/10 transition-colors">
                   <Mail className="w-5 h-5" />
                 </div>
                 <div>
                   <p className="text-sm text-gray-500 font-medium">Email</p>
-                  <p className="font-bold">encoded.ofc@gmail.com</p>
+                  <p className="font-bold">incoded.ofc@gmail.com</p>
                 </div>
               </a>
               

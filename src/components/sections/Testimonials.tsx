@@ -51,7 +51,7 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
               <div className="testimonials__user flex items-center gap-4">
                 <img 
                   src={testimonial.avatar} 
-                  alt={testimonial.name} 
+                  alt={`Depoimento de ${testimonial.name} - Cliente satisfeito da INCODED`} 
                   className="w-12 h-12 rounded-full border border-white/20 object-cover"
                   referrerPolicy="no-referrer"
                 />

@@ -84,7 +84,7 @@ export function Hero({ subtitle, videoUrl, onTrackClick }: HeroProps) {
                   <img 
                     key={i}
                     src={`https://i.pravatar.cc/100?u=client${i}`} 
-                    alt="Client" 
+                    alt={`Feedback de Cliente INCODED ${i}`} 
                     className="w-10 h-10 rounded-full border-2 border-black object-cover"
                   />
                 ))}

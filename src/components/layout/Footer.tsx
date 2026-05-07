@@ -49,7 +49,7 @@ export function Footer({ onOpenPrivacy }: FooterProps) {
             <ul className="footer__social space-y-4">
               <li className="flex items-center text-gray-400">
                 <Mail className="w-4 h-4 mr-3" />
-                encoded.ofc@gmail.com
+                incoded.ofc@gmail.com
               </li>
               <li className="flex items-center text-gray-400">
                 <WhatsAppIcon className="w-4 h-4 mr-3" />
