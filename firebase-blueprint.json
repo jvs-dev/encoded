@@ -86,6 +86,43 @@
         "updatedAt": { "type": "string", "format": "date-time" }
       },
       "required": ["name", "region", "sector", "phone", "status", "createdAt"]
+    },
+    "BlogUser": {
+      "title": "BlogUser",
+      "description": "A user of the blog system.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "fullName": { "type": "string" },
+        "phoneNumber": { "type": "string" },
+        "role": { "type": "string", "enum": ["user", "staff", "client", "admin"] },
+        "isVerified": { "type": "boolean" },
+        "isIncoded": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "fullName", "role", "createdAt"]
+    },
+    "BlogPost": {
+      "title": "BlogPost",
+      "description": "A blog post entry.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "slug": { "type": "string" },
+        "content": { "type": "string" },
+        "excerpt": { "type": "string" },
+        "authorId": { "type": "string" },
+        "authorName": { "type": "string" },
+        "authorRole": { "type": "string" },
+        "isVerifiedAuthor": { "type": "boolean" },
+        "isSystemPost": { "type": "boolean" },
+        "coverImage": { "type": "string" },
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "slug", "content", "authorId", "authorName", "createdAt"]
     }
   },
   "firestore": {
@@ -104,6 +141,14 @@
     "/prospects/{prospectId}": {
       "schema": { "$ref": "#/entities/Prospect" },
       "description": "Collection of business prospects."
+    },
+    "/blog_users/{userId}": {
+      "schema": { "$ref": "#/entities/BlogUser" },
+      "description": "Collection of blog user profiles."
+    },
+    "/blog_posts/{postId}": {
+      "schema": { "$ref": "#/entities/BlogPost" },
+      "description": "Collection of blog posts."
     }
   }
 }

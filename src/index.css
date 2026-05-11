@@ -1,9 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap');
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 @theme {
   --color-primary: #7C3AED;
   --color-primary-dark: #6D28D9;
   --color-brand-purple: #7C3AED;
+  --font-display: "Josefin Sans", sans-serif;
+}
+
+@layer base {
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+  }
 }
 
 html, body {

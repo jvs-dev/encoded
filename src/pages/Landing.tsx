@@ -230,20 +230,19 @@ export default function Landing() {
       </AnimatePresence>
 
       <Helmet>
-        <title>INCODED | Agência de Marketing, Sites e Identidade Visual</title>
+        <title>Criação de Sites e Marketing Digital em Salvador | INCODED</title>
         <link rel="canonical" href="https://www.incoded.com.br/" />
-        <meta name="description" content="Criação de sites, landing pages de alta conversão, gestão de anúncios e branding. A engenharia digital que seu negócio precisa para escalar." />
-        <meta name="keywords" content="agência de marketing digital, criação de landing page, site para advogados, site para clinicas, anuncios google ads, facebook ads, artes para instagram, logotipo, branding, INCODED" />
+        <meta name="description" content="Criação de sites, landing pages de alta conversão, gestão de anúncios e branding em Salvador. A engenharia digital que seu negócio precisa para escalar." />
         
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://incoded.com.br/" />
-        <meta property="og:title" content="INCODED | Otimize seu Marketing com Tecnologia de Ponta" />
-        <meta property="og:description" content="Sites rápidos, sistemas eficientes e artes que vendem. Conheça as soluções da INCODED para sua empresa." />
+        <meta property="og:url" content="https://www.incoded.com.br/" />
+        <meta property="og:title" content="Criação de Sites e Marketing Digital em Salvador | INCODED" />
+        <meta property="og:description" content="Sites rápidos, sistemas eficientes e artes que vendem em Salvador. Conheça as soluções da INCODED para sua empresa." />
         <meta property="og:image" content="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1200&auto=format&fit=crop" />
 
         <meta property="twitter:card" content="summary_large_image" />
-        <meta property="twitter:url" content="https://incoded.com.br/" />
-        <meta property="twitter:title" content="INCODED | Especialistas em Resultados Digitais" />
+        <meta property="twitter:url" content="https://www.incoded.com.br/" />
+        <meta property="twitter:title" content="Criação de Sites e Marketing Digital em Salvador | INCODED" />
         <meta property="twitter:description" content="Do design ao código: entregamos a solução completa para o crescimento do seu negócio." />
         <meta property="twitter:image" content="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1200&auto=format&fit=crop" />
       </Helmet>

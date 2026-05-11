@@ -108,6 +108,7 @@ export default function Prospect() {
     size: 'Média',
     phone: '',
     website: '',
+    maps_url: '',
     status: ProspectStatus.Novo,
     notes: ''
   });

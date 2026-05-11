@@ -1,18 +1,19 @@
 import { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { Menu, X } from 'lucide-react';
 
 interface NavbarProps {
-  activeSection: string;
+  activeSection?: string;
 }
 
 /**
  * Navbar Component
- * Block: navbar
- * Element: navbar__logo, navbar__link, navbar__button, navbar__mobile-menu
  */
-export function Navbar({ activeSection }: NavbarProps) {
+export function Navbar({ activeSection = '' }: NavbarProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const location = useLocation();
+  const isHomePage = location.pathname === '/';
 
   const navLinks = [
     { id: 'sobre', label: 'Sobre' },
@@ -22,28 +23,37 @@ export function Navbar({ activeSection }: NavbarProps) {
     { id: 'parceiros', label: 'Parceiros' },
   ];
 
+  const renderNavLink = (link: { id: string, label: string }, isMobile = false) => {
+    const href = isHomePage ? `#${link.id}` : `/#${link.id}`;
+    const className = isMobile 
+      ? `block px-4 py-3 text-lg font-medium transition-colors rounded-lg ${activeSection === link.id ? 'text-white bg-white/10' : 'text-gray-300 hover:text-white hover:bg-white/5'}`
+      : `navbar__link text-sm font-medium transition-colors ${activeSection === link.id ? 'text-white' : 'text-gray-300 hover:text-white'}`;
+
+    return isHomePage ? (
+      <a key={link.id} href={href} className={className} onClick={() => isMobile && setIsMenuOpen(false)}>
+        {link.label}
+      </a>
+    ) : (
+      <Link key={link.id} to={href} className={className} onClick={() => isMobile && setIsMenuOpen(false)}>
+        {link.label}
+      </Link>
+    );
+  };
+
   return (
     <header className="navbar">
       <nav className="fixed w-full z-50 bg-black/90 backdrop-blur-md border-b border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
-            <div className="navbar__logo flex-shrink-0 flex items-center">
+            <Link to="/" className="navbar__logo flex-shrink-0 flex items-center">
               <img src="/LogomarcaBranca.svg" alt="INCODED" className="h-8 w-auto" />
-            </div>
+            </Link>
             
             {/* Desktop Menu */}
             <div className="hidden md:flex space-x-8 items-center">
-              {navLinks.map((link) => (
-                <a 
-                  key={link.id}
-                  href={`#${link.id}`} 
-                  className={`navbar__link text-sm font-medium transition-colors ${activeSection === link.id ? 'text-white' : 'text-gray-300 hover:text-white'}`}
-                >
-                  {link.label}
-                </a>
-              ))}
+              {navLinks.map((link) => renderNavLink(link))}
               <a 
-                href="#contato" 
+                href={isHomePage ? "#contato" : "/#contato"}
                 className={`navbar__button px-5 py-2.5 text-sm font-bold transition-all rounded-none border ${activeSection === 'contato' ? 'bg-primary-dark text-white border-primary-dark' : 'bg-primary text-white hover:bg-primary-dark border-primary shadow-lg shadow-primary/20'}`}
               >
                 Fale Conosco
@@ -75,18 +85,9 @@ export function Navbar({ activeSection }: NavbarProps) {
               className="navbar__mobile-menu md:hidden bg-black/95 backdrop-blur-xl border-b border-white/10 overflow-hidden"
             >
               <div className="px-6 pt-4 pb-8 space-y-2">
-                {navLinks.map((link) => (
-                  <a 
-                    key={link.id}
-                    href={`#${link.id}`} 
-                    onClick={() => setIsMenuOpen(false)} 
-                    className={`block px-4 py-3 text-lg font-medium transition-colors rounded-lg ${activeSection === link.id ? 'text-white bg-white/10' : 'text-gray-300 hover:text-white hover:bg-white/5'}`}
-                  >
-                    {link.label}
-                  </a>
-                ))}
+                {navLinks.map((link) => renderNavLink(link, true))}
                 <a 
-                  href="#contato" 
+                  href={isHomePage ? "#contato" : "/#contato"}
                   onClick={() => setIsMenuOpen(false)} 
                   className={`block px-4 py-4 text-lg font-black text-white bg-primary mt-6 text-center rounded-lg active:scale-95 transition-all ${activeSection === 'contato' ? 'bg-primary-dark' : ''}`}
                 >

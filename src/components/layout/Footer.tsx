@@ -1,7 +1,8 @@
 import { Mail } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 interface FooterProps {
-  onOpenPrivacy: () => void;
+  onOpenPrivacy?: () => void;
 }
 
 const WhatsAppIcon = ({ className }: { className?: string }) => (
@@ -40,6 +41,7 @@ export function Footer({ onOpenPrivacy }: FooterProps) {
               <li><a href="#sobre" className="text-gray-400 hover:text-white transition-colors">Sobre</a></li>
               <li><a href="#servicos" className="text-gray-400 hover:text-white transition-colors">Serviços</a></li>
               <li><a href="#portfolio" className="text-gray-400 hover:text-white transition-colors">Portfólio</a></li>
+              <li><Link to="/blog" className="text-gray-400 hover:text-white transition-colors">Blog</Link></li>
               <li><a href="#contato" className="text-gray-400 hover:text-white transition-colors">Contato</a></li>
             </ul>
           </div>
