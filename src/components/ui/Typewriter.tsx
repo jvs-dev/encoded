@@ -70,8 +70,10 @@ export function Typewriter() {
           <span className="typewriter__text text-white">
             {part1}
             {hasBaseText && <br />}
-            <span className="text-primary inline-flex items-center">
-              {part2}
+            <span className="inline-flex items-center">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-400">
+                {part2}
+              </span>
               <span className={`typewriter__cursor border-r-4 ${hasBaseText ? 'border-primary' : 'border-white'} h-[0.9em] ml-1 animate-pulse`}></span>
             </span>
           </span>

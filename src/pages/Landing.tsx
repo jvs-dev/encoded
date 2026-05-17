@@ -58,7 +58,7 @@ export default function Landing() {
 
   const [siteContent, setSiteContent] = useState<any>({
     heroTitle: 'Engenharia digital para resultados reais.',
-    heroSubtitle: 'Consultoria, sites, sistemas e identidade visual. Resolvemos problemas complexos e otimizamos processos para empresas de todos os tamanhos.',
+    heroSubtitle: 'Sites de alta conversão, sistemas sob medida e identidade visual estratégica. Tratamos o digital com a seriedade que ele merece — de ponta a ponta.',
     aboutTitle: 'Para grandes corporações e empreendedores iniciantes.',
     aboutText: 'A INCODED nasceu com o propósito de democratizar o acesso à tecnologia e design de alto nível. Entendemos que cada negócio está em um momento diferente.',
     aboutImage: 'https://images.unsplash.com/photo-1551434678-e076c223a692?q=80&w=2070&auto=format&fit=crop',

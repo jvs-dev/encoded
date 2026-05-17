@@ -34,14 +34,15 @@ export function Hero({ subtitle, videoUrl, onTrackClick }: HeroProps) {
           muted
           loop
           playsInline
-          className="w-full h-full object-cover opacity-40 grayscale scale-x-[-1]"
+          className="w-full h-full object-cover opacity-20 grayscale scale-x-[-1]"
         >
           <source src={videoUrl || "/videowork.mp4"} type="video/mp4" />
         </video>
-        <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/70 to-black/30"></div>
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/60 to-black"></div>
-        <div className="absolute -top-[30%] -right-[10%] w-[60%] h-[80%] bg-primary/20 blur-[120px] rounded-full pointer-events-none"></div>
-        <div className="absolute -bottom-[20%] -left-[10%] w-[50%] h-[70%] bg-primary/10 blur-[100px] rounded-full pointer-events-none"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(10,7,14,0.8)_0%,_rgba(10,7,14,0.4)_100%)]"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0a070e] via-[#0a070e]/80 to-transparent flex"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0a070e]/30 via-[#0a070e]/80 to-[#0a070e]"></div>
+        <div className="absolute -top-[30%] -right-[10%] w-[60%] h-[80%] bg-primary/5 blur-[120px] rounded-full pointer-events-none"></div>
+        <div className="absolute -bottom-[20%] -left-[10%] w-[50%] h-[70%] bg-primary/5 blur-[100px] rounded-full pointer-events-none"></div>
       </div>
 
       <div className="hero__content max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full flex-1 flex items-center justify-center">
@@ -51,15 +52,18 @@ export function Hero({ subtitle, videoUrl, onTrackClick }: HeroProps) {
           transition={{ duration: 0.8 }}
           className="max-w-4xl w-full flex flex-col items-center text-center mt-12"
         >
-          <h1 className="hero__title text-[60px] font-bold tracking-tighter leading-[1.1] mb-6 w-full">
+          <h1 
+            className="hero__title text-5xl sm:text-6xl md:text-[72px] lg:text-[84px] font-bold tracking-tighter leading-[1.2] md:leading-[1.1] mb-6 w-full"
+            style={{ textTransform: 'math-auto' as any }}
+          >
             <Typewriter />
           </h1>
 
-          <p className="hero__subtitle text-lg md:text-xl text-gray-400 mb-10 leading-relaxed max-w-2xl mx-auto">
+          <p className="hero__subtitle text-base sm:text-lg md:text-xl text-gray-400 mb-[36px] leading-relaxed max-w-3xl mx-auto px-4">
             {subtitle}
           </p>
 
-          <div className="hero__actions flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
+          <div className="hero__actions flex flex-col sm:flex-row items-center justify-center gap-4 mb-12 w-full px-4 sm:px-0">
             <a
               onClick={() => onTrackClick("Solicitar Orçamento (Hero)")}
               href={`https://wa.me/5571991895994?text=${encodeURIComponent("Olá! Vi o site da INCODED e gostaria de impulsionar meu negócio com um projeto de alto nível.")}`}
