@@ -53,7 +53,7 @@ export function Packages({ subtitle, packages, onTrackClick }: PackagesProps) {
   ];
 
   return (
-    <section id="pacotes" className="packages py-32 bg-black border-t border-white/5 relative overflow-hidden">
+    <section id="pacotes" className="packages py-32 bg-[#0a070e] border-t border-white/5 relative overflow-hidden">
       {/* Background growth indicator graphics */}
       <div className="absolute inset-0 z-0 pointer-events-none opacity-5">
         <TrendingUp className="absolute top-20 right-[10%] w-64 h-64 text-primary rotate-12" />

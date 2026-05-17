@@ -15,7 +15,7 @@ export function PrivacyPolicyModal({ isOpen, onClose }: PrivacyPolicyModalProps)
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="modal fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+        <div className="modal fixed inset-0 z-[100] flex items-center justify-center p-4 bg-[#0a070e]/80 backdrop-blur-sm">
           <motion.div
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}

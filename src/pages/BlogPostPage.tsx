@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
+import { SEO } from '../components/SEO';
 import { motion, AnimatePresence } from 'motion/react';
 import { ChevronLeft, Calendar, User, CheckCircle, ShieldCheck, Tag, Share2, MessageCircle, Trash2 } from 'lucide-react';
 import { Navbar } from '../components/layout/Navbar';
@@ -32,13 +32,15 @@ export default function BlogPostPage() {
   useEffect(() => {
     const fetchPost = async () => {
       if (slug) {
+        const failSafe = setTimeout(() => setIsLoading(false), 5000);
         try {
           const data = await getPostBySlug(slug);
           setPost(data);
         } catch (err) {
           console.error('Error fetching post:', err);
         } finally {
-          setTimeout(() => setIsLoading(false), 1500);
+          setIsLoading(false);
+          clearTimeout(failSafe);
         }
       }
     };
@@ -99,7 +101,7 @@ export default function BlogPostPage() {
 
   if (!isLoading && !post) {
     return (
-      <div className="bg-black min-h-screen text-white flex flex-col items-center justify-center p-4">
+      <div className="bg-[#0a070e] min-h-screen text-white flex flex-col items-center justify-center p-4">
         <h1 className="text-4xl font-black mb-4 italic">POST NÃO <span className="text-primary italic">ENCONTRADO</span></h1>
         <Link to="/blog" className="text-gray-400 hover:text-white transition-colors flex items-center">
           <ChevronLeft className="w-4 h-4 mr-2" /> Voltar ao Blog
@@ -109,14 +111,13 @@ export default function BlogPostPage() {
   }
 
   return (
-    <div className="bg-black min-h-screen text-white">
-      <Helmet>
-        <title>{post ? `${post.title} | Blog INCODED` : 'Blog INCODED'}</title>
-        <link rel="canonical" href={`https://www.incoded.com.br/blog/${slug}`} />
-        <meta name="description" content={post?.excerpt || 'Post do blog INCODED'} />
-        <meta property="og:title" content={post ? `${post.title} | Blog INCODED` : 'Blog INCODED'} />
-        <meta property="og:url" content={`https://www.incoded.com.br/blog/${slug}`} />
-      </Helmet>
+    <div className="bg-[#0a070e] min-h-screen text-white">
+      <SEO 
+        title={post ? `${post.title} | Blog INCODED` : 'Blog INCODED'}
+        description={post?.excerpt || 'Post do blog INCODED'}
+        url={`https://incoded.com.br/blog/${slug}`}
+        image={post?.coverImage}
+      />
 
       <AnimatePresence>
         {isLoading && <Preloader />}
@@ -226,7 +227,7 @@ export default function BlogPostPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+            className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-[#0a070e]/80 backdrop-blur-sm"
           >
             <motion.div 
               initial={{ scale: 0.95 }}

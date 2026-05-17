@@ -23,7 +23,7 @@ const WhatsAppIcon = ({ className }: { className?: string }) => (
  */
 export function Footer({ onOpenPrivacy }: FooterProps) {
   return (
-    <footer className="footer bg-black border-t border-white/10 pt-20 pb-10">
+    <footer className="footer bg-[#0a070e] border-t border-white/10 pt-[79px] pb-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid md:grid-cols-4 gap-12 mb-16">
           <div className="col-span-2">

@@ -69,7 +69,7 @@ export const ROISection: React.FC<ROISectionProps> = ({ subtitle, items }) => {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
               viewport={{ once: true }}
-              className="bg-black p-6 sm:p-8 md:p-12 hover:bg-zinc-900/50 transition-colors group"
+              className="bg-[#0a070e] p-6 sm:p-8 md:p-12 hover:bg-zinc-900/50 transition-colors group"
             >
               <div className="mb-6 md:mb-8">{item.icon}</div>
               <h3 className="text-xs sm:text-sm font-black tracking-widest text-white/40 uppercase mb-4">{item.title}</h3>
@@ -83,7 +83,7 @@ export const ROISection: React.FC<ROISectionProps> = ({ subtitle, items }) => {
           ))}
         </div>
 
-        <div className="mt-12 md:mt-16 bg-black border border-white/10 p-6 sm:p-8 md:p-12 text-white flex flex-col md:flex-row items-center justify-between gap-8 rounded-2xl relative overflow-hidden">
+        <div className="mt-12 md:mt-16 bg-[#0a070e] border border-white/10 p-6 sm:p-8 md:p-12 text-white flex flex-col md:flex-row items-center justify-between gap-8 rounded-2xl relative overflow-hidden">
           <div className="absolute top-0 left-0 w-1 h-full bg-primary md:w-1 md:h-full"></div>
           <div className="absolute top-0 left-0 w-full h-1 bg-primary md:hidden"></div>
           <div className="max-w-xl text-center md:text-left">

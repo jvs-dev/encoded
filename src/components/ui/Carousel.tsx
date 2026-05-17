@@ -64,7 +64,7 @@ export function Carousel({ title, items }: CarouselProps) {
         </AnimatePresence>
         
         {/* Soft background glow based on current image would be nice, but simple overlay for now */}
-        <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors pointer-events-none" />
+        <div className="absolute inset-0 bg-[#0a070e]/20 group-hover:bg-[#0a070e]/0 transition-colors pointer-events-none" />
         
         <div className="carousel__overlay absolute inset-0 bg-gradient-to-t from-black/95 via-black/20 to-transparent flex flex-col justify-end p-6 pointer-events-none">
           <h4 className="text-xl md:text-2xl font-bold text-white flex items-center justify-between">
@@ -75,14 +75,14 @@ export function Carousel({ title, items }: CarouselProps) {
         
         <button 
           onClick={(e) => { e.stopPropagation(); prev(); }} 
-          className="carousel__nav carousel__nav--prev absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-white hover:text-black text-white p-2 md:p-3 rounded-full backdrop-blur-sm transition-all opacity-0 group-hover:opacity-100 hover:scale-110 active:scale-95 outline-none z-10" 
+          className="carousel__nav carousel__nav--prev absolute left-4 top-1/2 -translate-y-1/2 bg-[#0a070e]/50 hover:bg-white hover:text-black text-white p-2 md:p-3 rounded-full backdrop-blur-sm transition-all opacity-0 group-hover:opacity-100 hover:scale-110 active:scale-95 outline-none z-10" 
           aria-label="Anterior"
         >
           <ChevronLeft className="w-5 h-5 md:w-6 md:h-6" />
         </button>
         <button 
           onClick={(e) => { e.stopPropagation(); next(); }} 
-          className="carousel__nav carousel__nav--next absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-white hover:text-black text-white p-2 md:p-3 rounded-full backdrop-blur-sm transition-all opacity-0 group-hover:opacity-100 hover:scale-110 active:scale-95 outline-none z-10" 
+          className="carousel__nav carousel__nav--next absolute right-4 top-1/2 -translate-y-1/2 bg-[#0a070e]/50 hover:bg-white hover:text-black text-white p-2 md:p-3 rounded-full backdrop-blur-sm transition-all opacity-0 group-hover:opacity-100 hover:scale-110 active:scale-95 outline-none z-10" 
           aria-label="Próximo"
         >
           <ChevronRight className="w-5 h-5 md:w-6 md:h-6" />
@@ -106,7 +106,7 @@ export function Carousel({ title, items }: CarouselProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-black/95 p-4 md:p-10 backdrop-blur-xl"
+            className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#0a070e]/95 p-4 md:p-10 backdrop-blur-xl"
             onClick={() => setIsExpanded(false)}
           >
             <motion.button

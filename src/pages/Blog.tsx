@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Helmet } from 'react-helmet-async';
+import { SEO } from '../components/SEO';
 import { motion, AnimatePresence } from 'motion/react';
 import { LogIn, LogOut, Plus, ShieldCheck, Loader2, Search, SlidersHorizontal } from 'lucide-react';
 import { Navbar } from '../components/layout/Navbar';
@@ -108,6 +108,7 @@ export default function Blog() {
     });
 
     const fetchInitialPosts = async () => {
+      const failSafe = setTimeout(() => setIsLoading(false), 5000);
       try {
         const { posts: data, lastDoc: initialLastDoc } = await getPosts(10);
         setPosts(data);
@@ -117,7 +118,8 @@ export default function Blog() {
         console.error('Error fetching posts:', err);
       } finally {
         setIsDataLoading(false);
-        setTimeout(() => setIsLoading(false), 1500);
+        setIsLoading(false);
+        clearTimeout(failSafe);
       }
     };
 
@@ -151,14 +153,12 @@ export default function Blog() {
   };
 
   return (
-    <div className="bg-black min-h-screen text-white">
-      <Helmet>
-        <title>Blog | Criação de Sites e Marketing Digital em Salvador | INCODED</title>
-        <link rel="canonical" href="https://www.incoded.com.br/blog" />
-        <meta name="description" content="Acompanhe as últimas tendências de marketing, design e tecnologia no blog oficial da INCODED. Feed interativo para sua empresa." />
-        <meta property="og:title" content="Blog | INCODED News Feed" />
-        <meta property="og:url" content="https://www.incoded.com.br/blog" />
-      </Helmet>
+    <div className="bg-[#0a070e] min-h-screen text-white">
+      <SEO 
+        title="Blog | Criação de Sites e Marketing Digital em Salvador"
+        description="Acompanhe as últimas tendências de marketing, design e tecnologia no blog oficial da INCODED. Feed interativo para sua empresa."
+        url="https://incoded.com.br/blog"
+      />
 
       <AnimatePresence>
         {isLoading && <Preloader />}
@@ -236,7 +236,7 @@ export default function Blog() {
                               type="checkbox"
                               checked={showVerifiedOnly}
                               onChange={(e) => setShowVerifiedOnly(e.target.checked)}
-                              className="w-4 h-4 rounded-none bg-black border-white/10 text-primary focus:ring-0 focus:ring-offset-0 checkbox"
+                              className="w-4 h-4 rounded-none bg-[#0a070e] border-white/10 text-primary focus:ring-0 focus:ring-offset-0 checkbox"
                             />
                             <span className="text-[10px] font-black uppercase tracking-widest text-gray-300 group-hover:text-white transition-colors">
                               Apenas Verificados
@@ -397,7 +397,7 @@ export default function Blog() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+            className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-[#0a070e]/80 backdrop-blur-sm"
           >
             <motion.div 
               initial={{ scale: 0.95 }}

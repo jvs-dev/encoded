@@ -2,13 +2,11 @@ import { useState, useEffect } from 'react';
 
 /**
  * Typewriter Component
- * Block: typewriter
- * Element: typewriter__text, typewriter__cursor
  */
 export function Typewriter() {
   const phrases = [
-    `Engenharia digital para escalar sua empresa.`,
-    `Engenharia digital para fidelizar sua marca.`,
+    `Engenharia digital para resultados reais.`,
+    `Engenharia digital para impulsionar marcas.`,
     `Engenharia digital para quem quer crescer.`  
   ];
   
@@ -16,6 +14,9 @@ export function Typewriter() {
   const [currentText, setCurrentText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
   const [typingSpeed, setTypingSpeed] = useState(100);
+
+  // Use the longest phrase to reserve space
+  const longestPhrase = phrases.reduce((a, b) => a.length > b.length ? a : b);
 
   useEffect(() => {
     const handleTyping = () => {
@@ -47,12 +48,35 @@ export function Typewriter() {
 
     const timer = setTimeout(handleTyping, typingSpeed);
     return () => clearTimeout(timer);
-  }, [currentText, isDeleting, currentPhraseIndex]);
+  }, [currentText, isDeleting, currentPhraseIndex, phrases]);
+
+  const baseText = "Engenharia digital para ";
+  const hasBaseText = currentText.startsWith(baseText);
+  const part1 = hasBaseText ? baseText.trim() : currentText;
+  const part2 = hasBaseText ? currentText.substring(baseText.length) : "";
+  const longestPart2 = longestPhrase.substring(baseText.length);
 
   return (
-    <span className="typewriter">
-      <span className="typewriter__text">{currentText}</span>
-      <span className="typewriter__cursor border-r-4 border-white ml-1 animate-pulse"></span>
+    <span className="relative inline-block w-full text-center">
+      {/* Phantom text to reserve space */}
+      <span className="invisible opacity-0 block pointer-events-none select-none w-full" aria-hidden="true">
+        {baseText.trim()}
+        <br />
+        {longestPart2}
+      </span>
+      {/* Actual typewriter text */}
+      <span className="absolute top-0 left-0 w-full flex flex-col items-center justify-center pointer-events-none">
+        <span className="typewriter flex flex-col items-center">
+          <span className="typewriter__text text-white">
+            {part1}
+            {hasBaseText && <br />}
+            <span className="text-primary inline-flex items-center">
+              {part2}
+              <span className={`typewriter__cursor border-r-4 ${hasBaseText ? 'border-primary' : 'border-white'} h-[0.9em] ml-1 animate-pulse`}></span>
+            </span>
+          </span>
+        </span>
+      </span>
     </span>
   );
 }

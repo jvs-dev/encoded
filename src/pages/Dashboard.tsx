@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { SEO } from '../components/SEO';
 import { db, auth, googleProvider } from '../firebase';
-import { doc, getDoc, setDoc, collection, getDocs, deleteDoc, query, orderBy } from 'firebase/firestore';
+import { doc, getDoc, setDoc, collection, getDocs, deleteDoc, query, orderBy, addDoc } from 'firebase/firestore';
 import { signInWithPopup, signOut, onAuthStateChanged, User } from 'firebase/auth';
 import { motion } from 'motion/react';
 import { AdminNav } from '../components/layout/AdminNav';
-import { Lock, Save, LogOut, ArrowLeft, Loader2, LayoutDashboard, Activity, Users, MessageSquare, Trash2, Plus, ChevronDown, ChevronLeft, ChevronRight, Check, AlertCircle } from 'lucide-react';
+import { Lock, Save, LogOut, ArrowLeft, Loader2, LayoutDashboard, Activity, Users, MessageSquare, Trash2, Plus, ChevronDown, ChevronLeft, ChevronRight, Check, AlertCircle, Briefcase } from 'lucide-react';
 import { ICON_LIST, getIcon } from '../lib/icons';
 
 const CONTENT_ID = 'main';
@@ -15,12 +16,18 @@ export default function Dashboard() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
-  const [activeTab, setActiveTab] = useState<'content' | 'leads' | 'admins'>('content');
+  const [activeTab, setActiveTab] = useState<'content' | 'leads' | 'admins' | 'briefing'>('content');
+  const [briefingSubTab, setBriefingSubTab] = useState<'responses' | 'config'>('responses');
   
   // Leads state
   const [leads, setLeads] = useState<any[]>([]);
   const [currentPageLeads, setCurrentPageLeads] = useState(1);
   const pageSizeLeads = 6;
+  
+  // Briefing state
+  const [briefingResponses, setBriefingResponses] = useState<any[]>([]);
+  const [briefingForms, setBriefingForms] = useState<any[]>([]);
+  const [selectedForm, setSelectedForm] = useState<any>(null);
   
   // Admins state
   const [admins, setAdmins] = useState<any[]>([]);
@@ -134,6 +141,7 @@ export default function Dashboard() {
         await fetchContent();
         await fetchLeads();
         await fetchAdmins();
+        await fetchBriefings();
       } else {
         setUser(null);
         setLoading(false);
@@ -141,6 +149,19 @@ export default function Dashboard() {
     });
     return () => unsubscribe();
   }, []);
+
+  const fetchBriefings = async () => {
+    try {
+      const qResp = query(collection(db, 'briefing_responses'), orderBy('createdAt', 'desc'));
+      const snapResp = await getDocs(qResp);
+      setBriefingResponses(snapResp.docs.map(d => ({ id: d.id, ...d.data() })));
+
+      const snapForms = await getDocs(collection(db, 'briefing_forms'));
+      setBriefingForms(snapForms.docs.map(d => ({ id: d.id, ...d.data() })));
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const fetchLeads = async () => {
     try {
@@ -380,9 +401,38 @@ export default function Dashboard() {
     }
   };
 
+  const handleSaveBriefingForm = async (form: any) => {
+    setSaving(true);
+    try {
+      if (form.id) {
+        await setDoc(doc(db, 'briefing_forms', form.id), form);
+      } else {
+        await addDoc(collection(db, 'briefing_forms'), form);
+      }
+      setSuccessMsg('Formulário de briefing salvo!');
+      fetchBriefings();
+      setTimeout(() => setSuccessMsg(''), 3000);
+    } catch (err) {
+      setError('Erro ao salvar formulário.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleDeleteBriefingResponse = async (id: string) => {
+    if (window.confirm('Excluir esta resposta de briefing?')) {
+      try {
+        await deleteDoc(doc(db, 'briefing_responses', id));
+        setBriefingResponses(prev => prev.filter(r => r.id !== id));
+      } catch (err) {
+        setError('Erro ao excluir resposta.');
+      }
+    }
+  };
+
   if (loading) {
     return (
-      <div className="min-h-screen bg-black text-white flex items-center justify-center">
+      <div className="min-h-screen bg-[#0a070e] text-white flex items-center justify-center">
         <Loader2 className="w-8 h-8 animate-spin text-gray-500" />
       </div>
     );
@@ -390,7 +440,8 @@ export default function Dashboard() {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-black text-white flex items-center justify-center p-4">
+      <div className="min-h-screen bg-[#0a070e] text-white flex items-center justify-center p-4">
+        <SEO title="Login Dashboard" />
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -426,7 +477,8 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white pb-20 pt-20">
+    <div className="min-h-screen bg-[#0a070e] text-white pb-20 pt-20">
+      <SEO title="CMS Dashboard" url="https://incoded.com.br/dashboard" />
       <header className="bg-zinc-950 border-b border-white/10 fixed top-0 left-0 right-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
           <div className="flex items-center">
@@ -492,6 +544,13 @@ export default function Dashboard() {
             Leads
           </button>
           <button
+            onClick={() => setActiveTab('briefing')}
+            className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors ${activeTab === 'briefing' ? 'border-white text-white' : 'border-transparent text-gray-400 hover:text-white'}`}
+          >
+            <Briefcase className="w-4 h-4 inline-block mr-2" />
+            Briefings
+          </button>
+          <button
             onClick={() => setActiveTab('admins')}
             className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors ${activeTab === 'admins' ? 'border-white text-white' : 'border-transparent text-gray-400 hover:text-white'}`}
           >
@@ -513,7 +572,7 @@ export default function Dashboard() {
                   name="adminPassword"
                   value={content.adminPassword}
                   onChange={handleChange}
-                  className="w-full bg-black border border-white/10 p-4 text-white focus:outline-none focus:border-white transition-colors"
+                  className="w-full bg-[#0a070e] border border-white/10 p-4 text-white focus:outline-none focus:border-white transition-colors"
                 />
                 <p className="text-xs text-gray-500 mt-2">Esta senha é usada para acessar o Dashboard e o Analytics.</p>
               </div>
@@ -530,7 +589,7 @@ export default function Dashboard() {
                   name="heroTitle"
                   value={content.heroTitle}
                   onChange={handleChange}
-                  className="w-full bg-black border border-white/10 p-4 text-white focus:outline-none focus:border-white transition-colors min-h-[100px]"
+                  className="w-full bg-[#0a070e] border border-white/10 p-4 text-white focus:outline-none focus:border-white transition-colors min-h-[100px]"
                 />
               </div>
               <div>
@@ -539,7 +598,7 @@ export default function Dashboard() {
                   name="heroSubtitle"
                   value={content.heroSubtitle}
                   onChange={handleChange}
-                  className="w-full bg-black border border-white/10 p-4 text-white focus:outline-none focus:border-white transition-colors min-h-[100px]"
+                  className="w-full bg-[#0a070e] border border-white/10 p-4 text-white focus:outline-none focus:border-white transition-colors min-h-[100px]"
                 />
               </div>
               <div>
@@ -549,7 +608,7 @@ export default function Dashboard() {
                   name="heroVideoUrl"
                   value={content.heroVideoUrl || ''}
                   onChange={handleChange}
-                  className="w-full bg-black border border-white/10 p-4 text-white focus:outline-none focus:border-white transition-colors"
+                  className="w-full bg-[#0a070e] border border-white/10 p-4 text-white focus:outline-none focus:border-white transition-colors"
                   placeholder="/videowork.mp4 ou link externo"
                 />
                 <p className="text-[10px] text-gray-500 mt-2 italic">Dica: Use /videowork.mp4 para o vídeo padrão enviado ou um link direto de vídeo MP4.</p>
@@ -568,7 +627,7 @@ export default function Dashboard() {
                   name="aboutTitle"
                   value={content.aboutTitle}
                   onChange={handleChange}
-                  className="w-full bg-black border border-white/10 p-4 text-white focus:outline-none focus:border-white transition-colors"
+                  className="w-full bg-[#0a070e] border border-white/10 p-4 text-white focus:outline-none focus:border-white transition-colors"
                 />
               </div>
               <div>
@@ -577,7 +636,7 @@ export default function Dashboard() {
                   name="aboutText"
                   value={content.aboutText}
                   onChange={handleChange}
-                  className="w-full bg-black border border-white/10 p-4 text-white focus:outline-none focus:border-white transition-colors min-h-[100px]"
+                  className="w-full bg-[#0a070e] border border-white/10 p-4 text-white focus:outline-none focus:border-white transition-colors min-h-[100px]"
                 />
               </div>
               <div>
@@ -591,7 +650,7 @@ export default function Dashboard() {
                     name="aboutImage"
                     value={content.aboutImage || ''}
                     onChange={handleChange}
-                    className="w-full bg-black border border-white/10 p-4 text-white focus:outline-none focus:border-white transition-colors"
+                    className="w-full bg-[#0a070e] border border-white/10 p-4 text-white focus:outline-none focus:border-white transition-colors"
                     placeholder="https://images.unsplash.com/..."
                   />
                 </div>
@@ -609,7 +668,7 @@ export default function Dashboard() {
                   name="servicesSubtitle"
                   value={content.servicesSubtitle}
                   onChange={handleChange}
-                  className="w-full bg-black border border-white/10 p-4 text-white focus:outline-none focus:border-white transition-colors"
+                  className="w-full bg-[#0a070e] border border-white/10 p-4 text-white focus:outline-none focus:border-white transition-colors"
                 />
               </div>
               <div>
@@ -618,7 +677,7 @@ export default function Dashboard() {
                   name="processSubtitle"
                   value={content.processSubtitle}
                   onChange={handleChange}
-                  className="w-full bg-black border border-white/10 p-4 text-white focus:outline-none focus:border-white transition-colors"
+                  className="w-full bg-[#0a070e] border border-white/10 p-4 text-white focus:outline-none focus:border-white transition-colors"
                 />
               </div>
               <div>
@@ -627,7 +686,7 @@ export default function Dashboard() {
                   name="portfolioSubtitle"
                   value={content.portfolioSubtitle}
                   onChange={handleChange}
-                  className="w-full bg-black border border-white/10 p-4 text-white focus:outline-none focus:border-white transition-colors"
+                  className="w-full bg-[#0a070e] border border-white/10 p-4 text-white focus:outline-none focus:border-white transition-colors"
                 />
               </div>
               <div>
@@ -636,7 +695,7 @@ export default function Dashboard() {
                   name="contactSubtitle"
                   value={content.contactSubtitle}
                   onChange={handleChange}
-                  className="w-full bg-black border border-white/10 p-4 text-white focus:outline-none focus:border-white transition-colors"
+                  className="w-full bg-[#0a070e] border border-white/10 p-4 text-white focus:outline-none focus:border-white transition-colors"
                 />
               </div>
               <div>
@@ -645,7 +704,7 @@ export default function Dashboard() {
                   name="faqSubtitle"
                   value={content.faqSubtitle}
                   onChange={handleChange}
-                  className="w-full bg-black border border-white/10 p-4 text-white focus:outline-none focus:border-white transition-colors"
+                  className="w-full bg-[#0a070e] border border-white/10 p-4 text-white focus:outline-none focus:border-white transition-colors"
                 />
               </div>
               <div>
@@ -654,7 +713,7 @@ export default function Dashboard() {
                   name="packagesSubtitle"
                   value={content.packagesSubtitle}
                   onChange={handleChange}
-                  className="w-full bg-black border border-white/10 p-4 text-white focus:outline-none focus:border-white transition-colors"
+                  className="w-full bg-[#0a070e] border border-white/10 p-4 text-white focus:outline-none focus:border-white transition-colors"
                 />
               </div>
               <div>
@@ -663,7 +722,7 @@ export default function Dashboard() {
                   name="roiSubtitle"
                   value={content.roiSubtitle}
                   onChange={handleChange}
-                  className="w-full bg-black border border-white/10 p-4 text-white focus:outline-none focus:border-white transition-colors"
+                  className="w-full bg-[#0a070e] border border-white/10 p-4 text-white focus:outline-none focus:border-white transition-colors"
                 />
               </div>
             </div>
@@ -682,7 +741,7 @@ export default function Dashboard() {
             </div>
             <div className="space-y-8">
               {content.services.map((service, index) => (
-                <div key={index} className={`p-4 border ${service.active === false ? 'border-red-500/20 opacity-60' : 'border-white/5'} bg-black relative group`}>
+                <div key={index} className={`p-4 border ${service.active === false ? 'border-red-500/20 opacity-60' : 'border-white/5'} bg-[#0a070e] relative group`}>
                   <div className="absolute top-4 right-4 flex space-x-2">
                     <button 
                       onClick={() => removeService(index)}
@@ -794,7 +853,7 @@ export default function Dashboard() {
                       onChange={(e) => setContent(prev => ({ ...prev, showPartners: e.target.checked }))}
                     />
                     <div className={`block w-10 h-6 rounded-full transition-colors ${content.showPartners ? 'bg-white' : 'bg-zinc-800'}`}></div>
-                    <div className={`absolute left-1 top-1 bg-black w-4 h-4 rounded-full transition-transform ${content.showPartners ? 'translate-x-4' : ''}`}></div>
+                    <div className={`absolute left-1 top-1 bg-[#0a070e] w-4 h-4 rounded-full transition-transform ${content.showPartners ? 'translate-x-4' : ''}`}></div>
                   </div>
                 </label>
                 <button 
@@ -808,7 +867,7 @@ export default function Dashboard() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {content.partners?.map((item: any, idx: number) => (
-                <div key={idx} className="bg-black border border-white/5 p-4 relative group">
+                <div key={idx} className="bg-[#0a070e] border border-white/5 p-4 relative group">
                   <button 
                     onClick={() => removePartner(idx)}
                     className="absolute top-2 right-2 p-1 text-gray-500 hover:text-red-400 transition-colors"
@@ -866,7 +925,7 @@ export default function Dashboard() {
             
             <div className="space-y-4">
               {content.faqs?.map((faq: any, idx: number) => (
-                <div key={idx} className="bg-black border border-white/5 p-4 relative group">
+                <div key={idx} className="bg-[#0a070e] border border-white/5 p-4 relative group">
                   <button 
                     onClick={() => removeFAQItem(idx)}
                     className="absolute top-2 right-2 p-1 text-gray-500 hover:text-red-400 transition-colors"
@@ -916,7 +975,7 @@ export default function Dashboard() {
             
             <div className="space-y-6">
               {content.testimonials?.map((testimonial: any, idx: number) => (
-                <div key={idx} className="bg-black border border-white/5 p-4 relative group">
+                <div key={idx} className="bg-[#0a070e] border border-white/5 p-4 relative group">
                   <button 
                     onClick={() => removeTestimonial(idx)}
                     className="absolute top-2 right-2 p-1 text-gray-500 hover:text-red-400 transition-colors"
@@ -1011,7 +1070,7 @@ export default function Dashboard() {
                 </div>
                 <div className="grid grid-cols-1 gap-4">
                   {content.portfolioSites?.map((item: any, idx: number) => (
-                    <div key={idx} className="bg-black border border-white/5 p-4 relative group">
+                    <div key={idx} className="bg-[#0a070e] border border-white/5 p-4 relative group">
                       <button 
                         onClick={() => removePortfolioItem('portfolioSites', idx)}
                         className="absolute top-2 right-2 p-1 text-gray-500 hover:text-red-400 transition-colors"
@@ -1056,7 +1115,7 @@ export default function Dashboard() {
                 </div>
                 <div className="grid grid-cols-1 gap-4">
                   {content.portfolioLogos?.map((item: any, idx: number) => (
-                    <div key={idx} className="bg-black border border-white/5 p-4 relative group">
+                    <div key={idx} className="bg-[#0a070e] border border-white/5 p-4 relative group">
                       <button 
                         onClick={() => removePortfolioItem('portfolioLogos', idx)}
                         className="absolute top-2 right-2 p-1 text-gray-500 hover:text-red-400 transition-colors"
@@ -1101,7 +1160,7 @@ export default function Dashboard() {
                 </div>
                 <div className="grid grid-cols-1 gap-4">
                   {content.portfolioPosts?.map((item: any, idx: number) => (
-                    <div key={idx} className="bg-black border border-white/5 p-4 relative group">
+                    <div key={idx} className="bg-[#0a070e] border border-white/5 p-4 relative group">
                       <button 
                         onClick={() => removePortfolioItem('portfolioPosts', idx)}
                         className="absolute top-2 right-2 p-1 text-gray-500 hover:text-red-400 transition-colors"
@@ -1140,7 +1199,7 @@ export default function Dashboard() {
             <h2 className="text-lg font-bold mb-6 border-b border-white/5 pb-4">Pacotes de Aceleração</h2>
             <div className="space-y-8">
               {content.packages.map((pkg, index) => (
-                <div key={index} className="p-4 border border-white/5 bg-black">
+                <div key={index} className="p-4 border border-white/5 bg-[#0a070e]">
                   <h3 className="text-sm font-bold text-gray-400 mb-4 uppercase tracking-wider">Pacote {index + 1}</h3>
                   <div className="space-y-4">
                     <div>
@@ -1219,7 +1278,7 @@ export default function Dashboard() {
                 <>
                   <div className="space-y-4">
                     {leads.slice((currentPageLeads - 1) * pageSizeLeads, currentPageLeads * pageSizeLeads).map(lead => (
-                      <div key={lead.id} className="p-4 border border-white/5 bg-black relative group">
+                      <div key={lead.id} className="p-4 border border-white/5 bg-[#0a070e] relative group">
                         <button 
                           onClick={() => handleDeleteLead(lead.id)}
                           className="absolute top-4 right-4 text-gray-500 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
@@ -1284,6 +1343,214 @@ export default function Dashboard() {
           </div>
         )}
 
+        {activeTab === 'briefing' && (
+          <div className="space-y-6">
+            <div className="flex space-x-1 border-b border-white/5 mb-6">
+              <button
+                onClick={() => setBriefingSubTab('responses')}
+                className={`px-4 py-2 text-xs font-bold uppercase tracking-widest ${briefingSubTab === 'responses' ? 'text-white' : 'text-gray-500 hover:text-white'}`}
+              >
+                Respostas Recebidas
+              </button>
+              <button
+                onClick={() => setBriefingSubTab('config')}
+                className={`px-4 py-2 text-xs font-bold uppercase tracking-widest ${briefingSubTab === 'config' ? 'text-white' : 'text-gray-500 hover:text-white'}`}
+              >
+                Configurar Formulários
+              </button>
+            </div>
+
+            {briefingSubTab === 'responses' ? (
+              <section className="bg-zinc-950 border border-white/10 p-6">
+                <h2 className="text-lg font-bold mb-6 border-b border-white/5 pb-4">Briefings de Clientes</h2>
+                <div className="space-y-4">
+                  {briefingResponses.length === 0 ? (
+                    <p className="text-gray-500 text-center py-8">Nenhuma resposta de briefing recebida.</p>
+                  ) : (
+                    briefingResponses.map((br) => (
+                      <div key={br.id} className="p-4 border border-white/5 bg-[#0a070e] rounded-lg">
+                        <div className="flex justify-between items-start mb-4">
+                          <div>
+                            <span className="text-[10px] bg-primary/20 text-primary px-2 py-0.5 rounded uppercase font-bold mr-2">
+                              {br.formType}
+                            </span>
+                            <span className="text-xs text-gray-500">
+                              {br.createdAt?.toDate ? br.createdAt.toDate().toLocaleString('pt-BR') : ''}
+                            </span>
+                          </div>
+                          <button 
+                            onClick={() => handleDeleteBriefingResponse(br.id)}
+                            className="text-gray-500 hover:text-red-400 p-1"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                        <div className="grid md:grid-cols-3 gap-4 mb-4">
+                          <div>
+                            <p className="text-[10px] text-gray-500 uppercase tracking-widest">Cliente</p>
+                            <p className="font-bold text-sm tracking-tight">{br.clientName}</p>
+                          </div>
+                          <div>
+                            <p className="text-[10px] text-gray-500 uppercase tracking-widest">E-mail</p>
+                            <p className="text-sm tracking-tight">{br.clientEmail}</p>
+                          </div>
+                          <div>
+                            <p className="text-[10px] text-gray-500 uppercase tracking-widest">Fone</p>
+                            <p className="text-sm tracking-tight">{br.clientPhone}</p>
+                          </div>
+                        </div>
+                        <div className="mt-4 pt-4 border-t border-white/5">
+                          <p className="text-[10px] text-gray-500 uppercase tracking-widest mb-3">Respostas</p>
+                          <div className="space-y-3">
+                            {Object.entries(br.answers || {}).map(([key, value]) => (
+                              <div key={key}>
+                                <p className="text-[11px] font-bold text-gray-400 mb-1">{key}:</p>
+                                <p className="text-xs text-gray-300 bg-white/5 p-2 rounded">{String(value)}</p>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </section>
+            ) : (
+              <section className="bg-zinc-950 border border-white/10 p-6">
+                <div className="flex justify-between items-center mb-6 border-b border-white/5 pb-4">
+                  <h2 className="text-lg font-bold">Estrutura dos Formulários</h2>
+                  <div className="flex gap-2">
+                    {['website', 'marketing', 'system'].map(type => (
+                      <button 
+                        key={type}
+                        onClick={() => {
+                          const existing = briefingForms.find(f => f.type === type);
+                          setSelectedForm(existing || { type, title: `Briefing ${type}`, description: '', fields: [] });
+                        }}
+                        className={`text-[10px] font-bold px-3 py-1.5 transition-colors border ${selectedForm?.type === type ? 'bg-white text-black border-white' : 'bg-white/5 text-white border-white/10'}`}
+                      >
+                        {type.toUpperCase()}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {selectedForm ? (
+                  <div className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-[10px] uppercase tracking-widest text-gray-500 mb-2">Título do Formulário</label>
+                        <input
+                          type="text"
+                          value={selectedForm.title}
+                          onChange={e => setSelectedForm({ ...selectedForm, title: e.target.value })}
+                          className="w-full bg-[#0a070e] border border-white/10 p-3 text-sm focus:outline-none focus:border-white transition-colors"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[10px] uppercase tracking-widest text-gray-500 mb-2">Descrição Curta</label>
+                        <input
+                          type="text"
+                          value={selectedForm.description}
+                          onChange={e => setSelectedForm({ ...selectedForm, description: e.target.value })}
+                          className="w-full bg-[#0a070e] border border-white/10 p-3 text-sm focus:outline-none focus:border-white transition-colors"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <div className="flex justify-between items-center mb-4">
+                        <label className="text-[10px] uppercase tracking-widest text-gray-500">Campos de Pergunta</label>
+                        <button 
+                          onClick={() => {
+                            const newField = { id: `q_${Date.now()}`, label: 'Nova Pergunta', type: 'text', required: true };
+                            setSelectedForm({ ...selectedForm, fields: [...selectedForm.fields, newField] });
+                          }}
+                          className="text-[9px] bg-white text-black px-2 py-1 flex items-center"
+                        >
+                          <Plus className="w-3 h-3 mr-1" /> Add Campo
+                        </button>
+                      </div>
+
+                      <div className="space-y-4">
+                        {selectedForm.fields?.map((field: any, fIdx: number) => (
+                          <div key={fIdx} className="p-4 bg-[#0a070e] border border-white/5 relative">
+                            <button 
+                              onClick={() => {
+                                const newFields = selectedForm.fields.filter((_: any, i: number) => i !== fIdx);
+                                setSelectedForm({ ...selectedForm, fields: newFields });
+                              }}
+                              className="absolute top-2 right-2 text-gray-500 hover:text-red-400"
+                            >
+                              <Trash2 className="w-3 h-3" />
+                            </button>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                              <div className="md:col-span-2">
+                                <label className="block text-[9px] text-gray-600 uppercase mb-1">Label / Pergunta</label>
+                                <input
+                                  type="text"
+                                  value={field.label}
+                                  onChange={e => {
+                                    const newFields = [...selectedForm.fields];
+                                    newFields[fIdx].label = e.target.value;
+                                    newFields[fIdx].id = e.target.value.toLowerCase().replace(/[^a-z0-9]/g, '_');
+                                    setSelectedForm({ ...selectedForm, fields: newFields });
+                                  }}
+                                  className="w-full bg-zinc-950 border border-white/5 p-2 text-xs"
+                                />
+                              </div>
+                              <div>
+                                <label className="block text-[9px] text-gray-600 uppercase mb-1">Tipo</label>
+                                <select
+                                  value={field.type}
+                                  onChange={e => {
+                                    const newFields = [...selectedForm.fields];
+                                    newFields[fIdx].type = e.target.value;
+                                    setSelectedForm({ ...selectedForm, fields: newFields });
+                                  }}
+                                  className="w-full bg-zinc-950 border border-white/5 p-2 text-xs"
+                                >
+                                  <option value="text">Texto Curto</option>
+                                  <option value="textarea">Texto Longo</option>
+                                  <option value="select">Seleção</option>
+                                </select>
+                              </div>
+                            </div>
+                            <div className="mt-2 flex items-center">
+                              <input 
+                                type="checkbox" 
+                                checked={field.required}
+                                onChange={e => {
+                                  const newFields = [...selectedForm.fields];
+                                  newFields[fIdx].required = e.target.checked;
+                                  setSelectedForm({ ...selectedForm, fields: newFields });
+                                }}
+                                className="w-3 h-3 border-white/10 bg-[#0a070e]"
+                              />
+                              <label className="ml-2 text-[9px] text-gray-500 uppercase">Obrigatório</label>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <button
+                      onClick={() => handleSaveBriefingForm(selectedForm)}
+                      className="w-full bg-white text-black font-bold py-3 hover:bg-gray-200 transition-colors"
+                    >
+                      Salvar Estrutura do Formulário
+                    </button>
+                  </div>
+                ) : (
+                  <div className="py-12 text-center text-gray-500 italic">
+                    Selecione um tipo acima para configurar.
+                  </div>
+                )}
+              </section>
+            )}
+          </div>
+        )}
+
         {activeTab === 'admins' && (
           <div className="space-y-6">
             <section className="bg-zinc-950 border border-white/10 p-6">
@@ -1297,7 +1564,7 @@ export default function Dashboard() {
                   value={newAdminEmail}
                   onChange={(e) => setNewAdminEmail(e.target.value)}
                   placeholder="Email do novo administrador"
-                  className="flex-1 bg-black border border-white/10 px-4 py-3 text-white focus:outline-none focus:border-white transition-colors"
+                  className="flex-1 bg-[#0a070e] border border-white/10 px-4 py-3 text-white focus:outline-none focus:border-white transition-colors"
                   required
                 />
                 <button 
@@ -1309,14 +1576,14 @@ export default function Dashboard() {
               </form>
 
               <div className="space-y-2">
-                <div className="flex items-center justify-between p-4 border border-white/5 bg-black">
+                <div className="flex items-center justify-between p-4 border border-white/5 bg-[#0a070e]">
                   <div>
                     <p className="font-bold">jvssilv4@gmail.com</p>
                     <p className="text-xs text-green-400 mt-1">Admin Principal</p>
                   </div>
                 </div>
                 {admins.filter(a => a.email !== 'jvssilv4@gmail.com').map(admin => (
-                  <div key={admin.id} className="flex items-center justify-between p-4 border border-white/5 bg-black">
+                  <div key={admin.id} className="flex items-center justify-between p-4 border border-white/5 bg-[#0a070e]">
                     <div>
                       <p className="font-bold">{admin.email}</p>
                       <p className="text-xs text-gray-500 mt-1">

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { SEO } from '../components/SEO';
 import { motion } from 'motion/react';
 import { AdminNav } from '../components/layout/AdminNav';
 import { 
@@ -219,7 +220,7 @@ export default function WebData() {
 
   if (!user || !isAdminUser) {
     return (
-      <div className="min-h-screen bg-black text-white flex items-center justify-center p-4">
+      <div className="min-h-screen bg-[#0a070e] text-white flex items-center justify-center p-4">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -264,7 +265,12 @@ export default function WebData() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white font-sans selection:bg-white selection:text-black pb-20 pt-20">
+    <div className="min-h-screen bg-[#0a070e] text-white font-sans selection:bg-white selection:text-black pb-20 pt-20">
+      <SEO 
+        title="Web Analytics | INCODED"
+        description="Acompanhe o desempenho e o engajamento do seu site em tempo real."
+        url="https://incoded.com.br/webdata"
+      />
       {/* Header */}
       <header className="bg-zinc-950 border-b border-white/10 fixed top-0 left-0 right-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
@@ -463,7 +469,7 @@ export default function WebData() {
             </div>
             <div className="space-y-4">
               {topButtons.length > 0 ? topButtons.map((btn, idx) => (
-                <div key={idx} className="flex items-center justify-between p-4 bg-black border border-white/5 hover:border-white/20 transition-colors">
+                <div key={idx} className="flex items-center justify-between p-4 bg-[#0a070e] border border-white/5 hover:border-white/20 transition-colors">
                   <span className="text-sm font-medium text-gray-300">{btn.name}</span>
                   <span className="text-sm font-bold bg-white/10 px-3 py-1 rounded-full">{btn.clicks} clicks</span>
                 </div>

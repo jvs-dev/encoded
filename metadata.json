@@ -1,5 +1,8 @@
 {
   "name": "INCODED - Agência Digital",
-  "description": "Site da agência INCODED, oferecendo serviços de consultoria digital, sites personalizados, sistemas, identidade visual e social media.",
-  "requestFramePermissions": []
+  "description": "Engenharia digital de alta performance. Desenvolvemos sites, sistemas e identidades visuais que transformam negócios em autoridades digitais.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
 }

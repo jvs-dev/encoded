@@ -12,7 +12,7 @@ interface CareersProps {
  */
 export function Careers({ onTrackClick }: CareersProps) {
   return (
-    <section className="careers py-24 bg-black border-t border-white/5">
+    <section className="careers py-24 bg-[#0a070e] border-t border-white/5">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="careers__header flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
           <div>
@@ -33,7 +33,7 @@ export function Careers({ onTrackClick }: CareersProps) {
         <div className="careers__grid flex overflow-x-auto snap-x snap-mandatory gap-6 pb-8 md:grid md:grid-cols-3 md:overflow-visible md:pb-0 scrollbar-hide items-start">
           <JobCard 
             icon={Code2}
-            title="Programador Full-Stack"
+            title="Full-Stack DEV"
             type="Remoto • Tempo Integral"
             description="Buscamos desenvolvedores apaixonados por criar soluções escaláveis, APIs robustas e interfaces incríveis."
             requirements={["React / Next.js", "Node.js / TypeScript", "PostgreSQL / Prisma", "AWS / Docker"]}

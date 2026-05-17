@@ -86,7 +86,7 @@ export function About({ title, text, imageUrl }: AboutProps) {
         </div>
       </section>
 
-      <section className="about__stats py-16 bg-black border-y border-white/5 relative overflow-hidden">
+      <section className="about__stats py-16 bg-[#0a070e] border-y border-white/5 relative overflow-hidden">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-3xl h-32 bg-primary/5 blur-3xl rounded-full pointer-events-none"></div>
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">

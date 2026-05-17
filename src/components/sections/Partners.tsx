@@ -16,7 +16,7 @@ interface PartnersProps {
  */
 export function Partners({ partners }: PartnersProps) {
   return (
-    <section id="parceiros" className="partners py-20 bg-black border-t border-white/5 overflow-hidden">
+    <section id="parceiros" className="partners py-20 bg-[#0a070e] border-t border-white/5 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12 text-center">
         <h2 className="partners__title text-sm font-bold tracking-[0.3em] uppercase text-gray-500">Nossos Parceiros</h2>
       </div>

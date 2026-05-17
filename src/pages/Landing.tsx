@@ -1,5 +1,5 @@
 import React, { useState, FormEvent, useEffect } from 'react';
-import { Helmet } from 'react-helmet-async';
+import { SEO } from '../components/SEO';
 import { motion, useScroll, useSpring, AnimatePresence } from 'motion/react';
 import { collection, addDoc, serverTimestamp, updateDoc, doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase';
@@ -27,6 +27,7 @@ import { ServiceDetailModal } from '../components/ui/ServiceDetailModal';
 import { PrivacyPolicyModal } from '../components/ui/PrivacyPolicyModal';
 import { FloatingWhatsApp } from '../components/ui/FloatingWhatsApp';
 import { Preloader } from '../components/ui/Preloader';
+import { DigitalDiagnostics } from '../components/ui/DigitalDiagnostics';
 
 // Constants
 import { 
@@ -78,6 +79,9 @@ export default function Landing() {
   }, []);
 
   useEffect(() => {
+    // Fail-safe to ensure preloader removes even if fetch hangs
+    const failSafe = setTimeout(() => setIsLoading(false), 5000);
+
     const fetchContent = async () => {
       try {
         const docSnap = await getDoc(doc(db, 'site_content', 'main'));
@@ -87,8 +91,8 @@ export default function Landing() {
       } catch (err) {
         console.error('Error fetching site content:', err);
       } finally {
-        // Ensure preloader stays for at least 2 seconds
-        setTimeout(() => setIsLoading(false), 2000);
+        setIsLoading(false);
+        clearTimeout(failSafe);
       }
     };
     fetchContent();
@@ -224,28 +228,19 @@ export default function Landing() {
   const shouldShowPartners = siteContent.showPartners !== false;
 
   return (
-    <div className="landing min-h-screen bg-black text-white font-sans selection:bg-white selection:text-black overflow-x-hidden">
+    <div className="landing min-h-screen bg-[#0a070e] text-white font-sans selection:bg-white selection:text-[#0a070e] overflow-x-hidden">
+      <DigitalDiagnostics />
+      
       <AnimatePresence mode="wait">
         {isLoading && <Preloader key="preloader" />}
       </AnimatePresence>
 
-      <Helmet>
-        <title>Criação de Sites e Marketing Digital em Salvador | INCODED</title>
-        <link rel="canonical" href="https://www.incoded.com.br/" />
-        <meta name="description" content="Criação de sites, landing pages de alta conversão, gestão de anúncios e branding em Salvador. A engenharia digital que seu negócio precisa para escalar." />
-        
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://www.incoded.com.br/" />
-        <meta property="og:title" content="Criação de Sites e Marketing Digital em Salvador | INCODED" />
-        <meta property="og:description" content="Sites rápidos, sistemas eficientes e artes que vendem em Salvador. Conheça as soluções da INCODED para sua empresa." />
-        <meta property="og:image" content="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1200&auto=format&fit=crop" />
-
-        <meta property="twitter:card" content="summary_large_image" />
-        <meta property="twitter:url" content="https://www.incoded.com.br/" />
-        <meta property="twitter:title" content="Criação de Sites e Marketing Digital em Salvador | INCODED" />
-        <meta property="twitter:description" content="Do design ao código: entregamos a solução completa para o crescimento do seu negócio." />
-        <meta property="twitter:image" content="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1200&auto=format&fit=crop" />
-      </Helmet>
+      <SEO 
+        title="Criação de Sites e Marketing Digital em Salvador"
+        description="Criação de sites, landing pages de alta conversão, gestão de anúncios e branding em Salvador. A engenharia digital que seu negócio precisa para escalar."
+        url="https://www.incoded.com.br/"
+        image="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1200&auto=format&fit=crop"
+      />
 
       {/* Scroll Progress Bar */}
       <motion.div

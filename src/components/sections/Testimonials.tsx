@@ -21,7 +21,7 @@ interface TestimonialsProps {
  */
 export function Testimonials({ testimonials }: TestimonialsProps) {
   return (
-    <section id="depoimentos" className="testimonials py-24">
+    <section id="depoimentos" className="testimonials pt-24 pb-[80px]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionTitle align="center">
           O que dizem sobre nós

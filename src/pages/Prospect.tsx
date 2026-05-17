@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect, FormEvent } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { SEO } from '../components/SEO';
 import { AdminNav } from '../components/layout/AdminNav';
 import { 
   Building2, 
@@ -387,7 +388,7 @@ export default function Prospect() {
       Importante: Use informações reais baseadas no Google Maps. Tente trazer o máximo de resultados possível (pelo menos 50) para escala de prospecção.`;
 
       const response = await ai.models.generateContent({
-        model: "gemini-3-flash-preview",
+        model: "gemini-2.5-flash",
         contents: prompt,
         config: {
           tools: [{ googleMaps: {} }],
@@ -451,7 +452,7 @@ export default function Prospect() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-black text-white flex items-center justify-center font-sans">
+      <div className="min-h-screen bg-[#0a070e] text-white flex items-center justify-center font-sans">
         <Loader2 className="w-8 h-8 animate-spin text-gray-700" />
       </div>
     );
@@ -459,7 +460,8 @@ export default function Prospect() {
 
   if (!user || !isAdminUser) {
     return (
-      <div className="min-h-screen bg-black text-white flex items-center justify-center p-4 font-sans">
+      <div className="min-h-screen bg-[#0a070e] text-white flex items-center justify-center p-4 font-sans">
+        <SEO title="Prospecção Ativa" />
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -504,7 +506,8 @@ export default function Prospect() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white p-4 sm:p-8">
+    <div className="min-h-screen bg-[#0a070e] text-white p-4 sm:p-8">
+      <SEO title="Prospecção Ativa | INCODED" />
       {/* Header */}
       <header className="bg-zinc-950 border-b border-white/10 fixed top-0 left-0 right-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
@@ -580,7 +583,7 @@ export default function Prospect() {
                       placeholder="Ex: Tech..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="w-full bg-black border border-white/10 rounded-md py-2.5 pl-10 pr-4 text-sm focus:outline-none focus:border-white transition-colors"
+                      className="w-full bg-[#0a070e] border border-white/10 rounded-md py-2.5 pl-10 pr-4 text-sm focus:outline-none focus:border-white transition-colors"
                     />
                   </div>
                 </div>
@@ -591,7 +594,7 @@ export default function Prospect() {
                   <select 
                     value={filterStatus}
                     onChange={(e) => setFilterStatus(e.target.value)}
-                    className="w-full bg-black border border-white/10 rounded-md py-2.5 px-4 text-sm appearance-none focus:outline-none focus:border-white transition-colors"
+                    className="w-full bg-[#0a070e] border border-white/10 rounded-md py-2.5 px-4 text-sm appearance-none focus:outline-none focus:border-white transition-colors"
                   >
                     <option value="Todos">Todos Status</option>
                     {Object.values(ProspectStatus).map(s => <option key={s} value={s}>{s}</option>)}
@@ -604,7 +607,7 @@ export default function Prospect() {
                   <select 
                     value={filterRegion}
                     onChange={(e) => setFilterRegion(e.target.value)}
-                    className="w-full bg-black border border-white/10 rounded-md py-2.5 px-4 text-sm appearance-none focus:outline-none focus:border-white transition-colors"
+                    className="w-full bg-[#0a070e] border border-white/10 rounded-md py-2.5 px-4 text-sm appearance-none focus:outline-none focus:border-white transition-colors"
                   >
                     {regions.map(r => <option key={r} value={r}>{r}</option>)}
                   </select>
@@ -616,7 +619,7 @@ export default function Prospect() {
                   <select 
                     value={filterSector}
                     onChange={(e) => setFilterSector(e.target.value)}
-                    className="w-full bg-black border border-white/10 rounded-md py-2.5 px-4 text-sm appearance-none focus:outline-none focus:border-white transition-colors"
+                    className="w-full bg-[#0a070e] border border-white/10 rounded-md py-2.5 px-4 text-sm appearance-none focus:outline-none focus:border-white transition-colors"
                   >
                     {sectors.map(s => <option key={s} value={s}>{s}</option>)}
                   </select>
@@ -628,7 +631,7 @@ export default function Prospect() {
                   <select 
                     value={filterSize}
                     onChange={(e) => setFilterSize(e.target.value)}
-                    className="w-full bg-black border border-white/10 rounded-md py-2.5 px-4 text-sm appearance-none focus:outline-none focus:border-white transition-colors"
+                    className="w-full bg-[#0a070e] border border-white/10 rounded-md py-2.5 px-4 text-sm appearance-none focus:outline-none focus:border-white transition-colors"
                   >
                     {sizes.map(s => <option key={s} value={s}>{s}</option>)}
                   </select>
@@ -681,7 +684,7 @@ export default function Prospect() {
                     
                     <button 
                       onClick={exportSelectionToCsv}
-                      className="bg-black text-white px-3 py-1.5 rounded text-xs font-bold flex items-center hover:bg-zinc-800 transition-all"
+                      className="bg-[#0a070e] text-white px-3 py-1.5 rounded text-xs font-bold flex items-center hover:bg-zinc-800 transition-all"
                     >
                       <Download className="w-3.5 h-3.5 mr-2" /> Baixar Planilha
                     </button>
@@ -854,7 +857,7 @@ export default function Prospect() {
                       value={discoveryQuery}
                       onChange={(e) => setDiscoveryQuery(e.target.value)}
                       onKeyDown={(e) => e.key === 'Enter' && handleDiscovery()}
-                      className="w-full bg-black border border-white/10 rounded-lg py-4 pl-12 pr-4 text-lg focus:outline-none focus:border-white transition-all shadow-inner"
+                      className="w-full bg-[#0a070e] border border-white/10 rounded-lg py-4 pl-12 pr-4 text-lg focus:outline-none focus:border-white transition-all shadow-inner"
                     />
                   </div>
                 </div>
@@ -863,7 +866,7 @@ export default function Prospect() {
                   <select 
                     value={filterRegion}
                     onChange={(e) => setFilterRegion(e.target.value)}
-                    className="w-full bg-black border border-white/10 rounded-lg py-4 px-4 text-lg appearance-none focus:outline-none focus:border-white transition-all"
+                    className="w-full bg-[#0a070e] border border-white/10 rounded-lg py-4 px-4 text-lg appearance-none focus:outline-none focus:border-white transition-all"
                   >
                     {regions.map(r => <option key={r} value={r}>{r}</option>)}
                   </select>
@@ -877,7 +880,7 @@ export default function Prospect() {
                   <select 
                     value={discoverySize}
                     onChange={(e) => setDiscoverySize(e.target.value)}
-                    className="w-full bg-black border border-white/10 rounded-lg py-3 px-4 text-sm appearance-none focus:outline-none focus:border-white transition-all text-gray-300"
+                    className="w-full bg-[#0a070e] border border-white/10 rounded-lg py-3 px-4 text-sm appearance-none focus:outline-none focus:border-white transition-all text-gray-300"
                   >
                     <option value="Todos">Todos os Portes</option>
                     <option value="Pequena">Pequena (MEI/ME)</option>
@@ -891,7 +894,7 @@ export default function Prospect() {
                   <select 
                     value={discoveryPopularity}
                     onChange={(e) => setDiscoveryPopularity(e.target.value)}
-                    className="w-full bg-black border border-white/10 rounded-lg py-3 px-4 text-sm appearance-none focus:outline-none focus:border-white transition-all text-gray-300"
+                    className="w-full bg-[#0a070e] border border-white/10 rounded-lg py-3 px-4 text-sm appearance-none focus:outline-none focus:border-white transition-all text-gray-300"
                   >
                     <option value="Todas">Todas as Avaliações</option>
                     <option value="Alta">Alta (4.5+ estrelas)</option>
@@ -905,7 +908,7 @@ export default function Prospect() {
                   <select 
                     value={discoveryHasWebsite}
                     onChange={(e) => setDiscoveryHasWebsite(e.target.value)}
-                    className="w-full bg-black border border-white/10 rounded-lg py-3 px-4 text-sm appearance-none focus:outline-none focus:border-white transition-all text-gray-300"
+                    className="w-full bg-[#0a070e] border border-white/10 rounded-lg py-3 px-4 text-sm appearance-none focus:outline-none focus:border-white transition-all text-gray-300"
                   >
                     <option value="Tanto faz">Tanto faz</option>
                     <option value="Sim">Sim, obrigatório</option>
@@ -1076,7 +1079,7 @@ export default function Prospect() {
       {/* Add/Edit Modal */}
       <AnimatePresence>
         {showAddModal && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-[#0a070e]/80 backdrop-blur-md">
             <motion.div 
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
@@ -1103,7 +1106,7 @@ export default function Prospect() {
                     required
                     value={formData.name}
                     onChange={(e) => setFormData({...formData, name: e.target.value})}
-                    className="w-full bg-black border border-white/10 p-4 text-white focus:outline-none focus:border-white transition-colors"
+                    className="w-full bg-[#0a070e] border border-white/10 p-4 text-white focus:outline-none focus:border-white transition-colors"
                   />
                 </div>
 
@@ -1113,7 +1116,7 @@ export default function Prospect() {
                     <select 
                       value={formData.region}
                       onChange={(e) => setFormData({...formData, region: e.target.value})}
-                      className="w-full bg-black border border-white/10 p-4 text-white focus:outline-none focus:border-white transition-colors appearance-none"
+                      className="w-full bg-[#0a070e] border border-white/10 p-4 text-white focus:outline-none focus:border-white transition-colors appearance-none"
                     >
                       {regions.filter(r => r !== 'Todas').map(r => <option key={r} value={r}>{r}</option>)}
                     </select>
@@ -1123,7 +1126,7 @@ export default function Prospect() {
                     <select 
                       value={formData.size}
                       onChange={(e) => setFormData({...formData, size: e.target.value})}
-                      className="w-full bg-black border border-white/10 p-4 text-white focus:outline-none focus:border-white transition-colors appearance-none"
+                      className="w-full bg-[#0a070e] border border-white/10 p-4 text-white focus:outline-none focus:border-white transition-colors appearance-none"
                     >
                       {sizes.filter(s => s !== 'Todos').map(s => <option key={s} value={s}>{s}</option>)}
                     </select>
@@ -1136,7 +1139,7 @@ export default function Prospect() {
                     <select 
                       value={formData.sector}
                       onChange={(e) => setFormData({...formData, sector: e.target.value})}
-                      className="w-full bg-black border border-white/10 p-4 text-white focus:outline-none focus:border-white transition-colors appearance-none"
+                      className="w-full bg-[#0a070e] border border-white/10 p-4 text-white focus:outline-none focus:border-white transition-colors appearance-none"
                     >
                       {sectors.filter(s => s !== 'Todos').map(s => <option key={s} value={s}>{s}</option>)}
                     </select>
@@ -1149,7 +1152,7 @@ export default function Prospect() {
                       value={formData.phone}
                       onChange={(e) => setFormData({...formData, phone: e.target.value})}
                       placeholder="(00) 00000-0000"
-                      className="w-full bg-black border border-white/10 p-4 text-white focus:outline-none focus:border-white transition-colors"
+                      className="w-full bg-[#0a070e] border border-white/10 p-4 text-white focus:outline-none focus:border-white transition-colors"
                     />
                   </div>
                 </div>
@@ -1161,7 +1164,7 @@ export default function Prospect() {
                     value={formData.website}
                     onChange={(e) => setFormData({...formData, website: e.target.value})}
                     placeholder="https://exemplo.com.br"
-                    className="w-full bg-black border border-white/10 p-4 text-white focus:outline-none focus:border-white transition-colors"
+                    className="w-full bg-[#0a070e] border border-white/10 p-4 text-white focus:outline-none focus:border-white transition-colors"
                   />
                 </div>
 
@@ -1172,7 +1175,7 @@ export default function Prospect() {
                     value={formData.maps_url}
                     onChange={(e) => setFormData({...formData, maps_url: e.target.value})}
                     placeholder="https://maps.app.goo.gl/..."
-                    className="w-full bg-black border border-white/10 p-4 text-white focus:outline-none focus:border-white transition-colors"
+                    className="w-full bg-[#0a070e] border border-white/10 p-4 text-white focus:outline-none focus:border-white transition-colors"
                   />
                 </div>
 
@@ -1181,7 +1184,7 @@ export default function Prospect() {
                   <select 
                     value={formData.status}
                     onChange={(e) => setFormData({...formData, status: e.target.value as ProspectStatus})}
-                    className="w-full bg-black border border-white/10 p-4 text-white focus:outline-none focus:border-white transition-colors appearance-none"
+                    className="w-full bg-[#0a070e] border border-white/10 p-4 text-white focus:outline-none focus:border-white transition-colors appearance-none"
                   >
                     {Object.values(ProspectStatus).map(s => <option key={s} value={s}>{s}</option>)}
                   </select>
@@ -1193,7 +1196,7 @@ export default function Prospect() {
                     value={formData.notes}
                     onChange={(e) => setFormData({...formData, notes: e.target.value})}
                     placeholder="Ex: Agendar reunião de apresentação..."
-                    className="w-full bg-black border border-white/10 p-4 text-white focus:outline-none focus:border-white transition-colors min-h-[100px]"
+                    className="w-full bg-[#0a070e] border border-white/10 p-4 text-white focus:outline-none focus:border-white transition-colors min-h-[100px]"
                   />
                 </div>
 

@@ -99,7 +99,7 @@ export function FeedPost({ post, user, profile, isAdmin, onDelete }: FeedPostPro
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      className="bg-black border border-white/10 mb-8 overflow-hidden group"
+      className="bg-[#0a070e] border border-white/10 mb-8 overflow-hidden group"
     >
       {/* Post Header */}
       <div className="p-4 md:p-6 flex items-center justify-between border-b border-white/5">
@@ -219,7 +219,7 @@ export function FeedPost({ post, user, profile, isAdmin, onDelete }: FeedPostPro
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            className="bg-black border-t border-white/5"
+            className="bg-[#0a070e] border-t border-white/5"
           >
             <div className="p-4 md:p-6">
               {/* Comment Input */}

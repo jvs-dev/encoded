@@ -23,7 +23,7 @@ export function FAQ({ subtitle, faqs }: FAQProps) {
   return (
     <section id="faq" className="faq py-24 bg-zinc-950 border-t border-white/5">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        <SectionTitle align="center" subtitle={subtitle}>
+        <SectionTitle align="center" subtitle={subtitle} className="!mb-[52px] [&_h2]:!mb-[4px]">
           Perguntas Frequentes
         </SectionTitle>
 

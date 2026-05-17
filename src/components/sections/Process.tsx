@@ -40,7 +40,7 @@ export function Process({ subtitle }: ProcessProps) {
   ];
 
   return (
-    <section id="processo" className="process py-24 bg-black border-t border-white/5 relative overflow-hidden">
+    <section id="processo" className="process py-24 bg-[#0a070e] border-t border-white/5 relative overflow-hidden">
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-white/[0.02] rounded-full blur-3xl pointer-events-none"></div>
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -64,7 +64,7 @@ export function Process({ subtitle }: ProcessProps) {
               <div className="process__icon-box w-24 h-24 rounded-full bg-zinc-950 border border-white/10 flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(255,255,255,0.03)] group hover:border-white/30 transition-colors">
                 <div className="relative">
                   {item.icon}
-                  <span className="process__step-number absolute -top-3 -right-4 text-[10px] font-bold text-gray-500 bg-black px-1">
+                  <span className="process__step-number absolute -top-3 -right-4 text-[10px] font-bold text-gray-500 bg-[#0a070e] px-1">
                     {item.step}
                   </span>
                 </div>

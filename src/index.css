@@ -14,6 +14,26 @@
     font-family: var(--font-display);
     text-transform: uppercase;
   }
+
+  body {
+    background-color: #0a070e;
+    position: relative;
+  }
+
+  /* Noise Texture Overlay */
+  body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("https://grainy-gradients.vercel.app/noise.svg");
+    opacity: 0.15;
+    pointer-events: none;
+    z-index: 50;
+    filter: brightness(100%) contrast(150%);
+  }
 }
 
 html, body {
@@ -43,12 +63,12 @@ section[id] {
 }
 
 ::-webkit-scrollbar-track {
-  background: #000000;
+  background: #0a070e;
 }
 
 ::-webkit-scrollbar-thumb {
   background: #ffffff;
-  border: 3px solid #000000;
+  border: 3px solid #0a070e;
   border-radius: 10px;
 }
 

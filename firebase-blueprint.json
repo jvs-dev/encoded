@@ -123,6 +123,45 @@
         "updatedAt": { "type": "string", "format": "date-time" }
       },
       "required": ["title", "slug", "content", "authorId", "authorName", "createdAt"]
+    },
+    "BriefingForm": {
+      "title": "BriefingForm",
+      "description": "Structure of a briefing form.",
+      "type": "object",
+      "properties": {
+        "type": { "type": "string", "enum": ["website", "marketing", "system"] },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "fields": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "label": { "type": "string" },
+              "type": { "type": "string", "enum": ["text", "textarea", "checkbox", "radio", "select"] },
+              "placeholder": { "type": "string" },
+              "options": { "type": "array", "items": { "type": "string" } },
+              "required": { "type": "boolean" }
+            }
+          }
+        }
+      },
+      "required": ["type", "title", "fields"]
+    },
+    "BriefingResponse": {
+      "title": "BriefingResponse",
+      "description": "A response to a briefing form.",
+      "type": "object",
+      "properties": {
+        "formType": { "type": "string" },
+        "clientName": { "type": "string" },
+        "clientEmail": { "type": "string" },
+        "clientPhone": { "type": "string" },
+        "answers": { "type": "object" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["formType", "clientName", "clientEmail", "answers", "createdAt"]
     }
   },
   "firestore": {
@@ -149,6 +188,14 @@
     "/blog_posts/{postId}": {
       "schema": { "$ref": "#/entities/BlogPost" },
       "description": "Collection of blog posts."
+    },
+    "/briefing_forms/{formId}": {
+      "schema": { "$ref": "#/entities/BriefingForm" },
+      "description": "Collection of briefing form structures."
+    },
+    "/briefing_responses/{responseId}": {
+      "schema": { "$ref": "#/entities/BriefingResponse" },
+      "description": "Collection of briefing form responses."
     }
   }
 }
