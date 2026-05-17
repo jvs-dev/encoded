@@ -12,6 +12,16 @@ async function startServer() {
 
   app.use(express.json());
 
+  // Route: robots.txt
+  app.get("/robots.txt", (req, res) => {
+    res.type("text/plain");
+    res.send(`User-agent: *
+Allow: /
+
+Sitemap: https://www.incoded.com.br/sitemap.xml
+`);
+  });
+
   // Sitemap Route
   app.get("/sitemap.xml", (req, res) => {
     res.header("Content-Type", "application/xml");
